@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="QLTV.LibraryDashboard">
+        <div class="o_library_dashboard">
+            <div class="o_library_dashboard__grid">
+                <div class="o_library_dashboard__kpi">
+                    <span>Total Books</span>
+                    <strong t-esc="state.kpis.total_books || 0"/>
+                </div>
+                <div class="o_library_dashboard__kpi">
+                    <span>Total Copies</span>
+                    <strong t-esc="state.kpis.total_copies || 0"/>
+                </div>
+                <div class="o_library_dashboard__kpi">
+                    <span>Readers</span>
+                    <strong t-esc="state.kpis.total_readers || 0"/>
+                </div>
+                <div class="o_library_dashboard__kpi">
+                    <span>Loans</span>
+                    <strong t-esc="state.kpis.total_loans || 0"/>
+                </div>
+                <div class="o_library_dashboard__kpi">
+                    <span>Borrowed</span>
+                    <strong t-esc="state.kpis.borrowed || 0"/>
+                </div>
+                <div class="o_library_dashboard__kpi">
+                    <span>Overdue</span>
+                    <strong t-esc="state.kpis.overdue || 0"/>
+                </div>
+                <div class="o_library_dashboard__kpi">
+                    <span>Returned</span>
+                    <strong t-esc="state.kpis.returned || 0"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

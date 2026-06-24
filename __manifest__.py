@@ -1,0 +1,33 @@
+{
+    "name": "Library Management System",
+    "summary": "Manage books, readers, borrowing, returns, dashboard, and reports.",
+    "version": "16.0.1.0.0",
+    "category": "Education",
+    "author": "QLTV",
+    "website": "",
+    "license": "LGPL-3",
+    "depends": ["base", "web", "mail"],
+    "data": [
+        "security/library_security.xml",
+        "security/ir.model.access.csv",
+        "data/library_cron.xml",
+        "views/library_book_views.xml",
+        "views/library_reader_views.xml",
+        "views/library_loan_views.xml",
+        "views/library_dashboard_views.xml",
+        "views/library_menus.xml",
+        "report/library_report_templates.xml",
+        "report/library_reports.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "QLTV/static/src/dashboard/library_dashboard.js",
+            "QLTV/static/src/dashboard/library_dashboard.xml",
+            "QLTV/static/src/dashboard/library_dashboard.scss",
+            "QLTV/static/src/list/library_list_renderer.js",
+            "QLTV/static/src/list/library_list_renderer.scss",
+        ],
+    },
+    "application": True,
+    "installable": True,
+}

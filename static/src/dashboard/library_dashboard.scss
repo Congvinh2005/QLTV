@@ -1,0 +1,28 @@
+.o_library_dashboard {
+    padding: 16px;
+}
+
+.o_library_dashboard__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.o_library_dashboard__kpi {
+    border: 1px solid #d8dee6;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
+}
+
+.o_library_dashboard__kpi span {
+    display: block;
+    color: #667085;
+    font-size: 13px;
+}
+
+.o_library_dashboard__kpi strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 24px;
+}

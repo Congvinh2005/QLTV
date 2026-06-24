@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_library_root" name="Library" sequence="10"/>
+    <menuitem id="menu_library_dashboard" name="Dashboard" parent="menu_library_root" action="action_library_dashboard" sequence="10"/>
+    <menuitem id="menu_library_books" name="Books" parent="menu_library_root" action="action_library_book" sequence="20"/>
+    <menuitem id="menu_library_readers" name="Readers" parent="menu_library_root" action="action_library_reader" sequence="30"/>
+    <menuitem id="menu_library_loans" name="Loans" parent="menu_library_root" action="action_library_loan" sequence="40"/>
+</odoo>
