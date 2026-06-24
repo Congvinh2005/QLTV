@@ -1,1 +1,1 @@
-from . import library_dashboard
+from . import dashboard_controller
