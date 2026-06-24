@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
     <record id="seq_library_loan" model="ir.sequence">
-        <field name="name">Library Loan</field>
+        <field name="name">Phiếu mượn thư viện</field>
         <field name="code">library.loan</field>
         <field name="prefix">LOAN/%(year)s/</field>
         <field name="padding">5</field>
     </record>
 
     <record id="ir_cron_library_overdue" model="ir.cron">
-        <field name="name">Library: Check Overdue Loans</field>
-        <field name="model_id" ref="model_library_loan"/>
+        <field name="name">Thư viện: Kiểm tra phiếu mượn quá hạn</field>
+        <field name="model_id" ref="model_library_loan" />
         <field name="state">code</field>
         <field name="code">model.action_check_overdue()</field>
         <field name="interval_number">1</field>

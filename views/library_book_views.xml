@@ -4,15 +4,16 @@
         <field name="name">library.book.tree</field>
         <field name="model">library.book</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="available_count == 0" decoration-warning="available_count &lt;= 2">
-                <field name="code"/>
-                <field name="name"/>
-                <field name="author"/>
-                <field name="category"/>
-                <field name="quantity_total"/>
-                <field name="borrowed_count"/>
-                <field name="available_count"/>
-                <field name="total_borrow_count"/>
+            <tree decoration-danger="available_count == 0"
+                decoration-warning="available_count &lt;= 2">
+                <field name="code" />
+                <field name="name" />
+                <field name="author" />
+                <field name="category" />
+                <field name="quantity_total" />
+                <field name="borrowed_count" />
+                <field name="available_count" />
+                <field name="total_borrow_count" />
             </tree>
         </field>
     </record>
@@ -23,28 +24,28 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <field name="cover_image" widget="image" class="oe_avatar"/>
+                    <field name="cover_image" widget="image" class="oe_avatar" />
                     <group>
                         <group>
-                            <field name="code"/>
-                            <field name="name"/>
-                            <field name="author"/>
-                            <field name="category"/>
-                            <field name="publisher"/>
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="author" />
+                            <field name="category" />
+                            <field name="publisher" />
                         </group>
                         <group>
-                            <field name="publication_year"/>
-                            <field name="isbn"/>
-                            <field name="shelf_location"/>
-                            <field name="quantity_total"/>
-                            <field name="available_count" readonly="1"/>
+                            <field name="publication_year" />
+                            <field name="isbn" />
+                            <field name="shelf_location" />
+                            <field name="quantity_total" />
+                            <field name="available_count" readonly="1" />
                         </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
                 </div>
             </form>
         </field>
@@ -55,24 +56,26 @@
         <field name="model">library.book</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
-                <field name="code"/>
-                <field name="author"/>
-                <field name="publisher"/>
-                <filter name="out_of_stock" string="Out of Stock" domain="[('available_count', '=', 0)]"/>
-                <group expand="0" string="Group By">
-                    <filter name="group_category" string="Category" context="{'group_by': 'category'}"/>
-                    <filter name="group_author" string="Author" context="{'group_by': 'author'}"/>
-                    <filter name="group_publisher" string="Publisher" context="{'group_by': 'publisher'}"/>
+                <field name="name" />
+                <field name="code" />
+                <field name="author" />
+                <field name="publisher" />
+                <filter name="out_of_stock" string="Hết sách" domain="[('available_count', '=', 0)]" />
+                <group expand="0" string="Nhóm theo">
+                    <filter name="group_category" string="Thể loại"
+                        context="{'group_by': 'category'}" />
+                    <filter name="group_author" string="Tác giả" context="{'group_by': 'author'}" />
+                    <filter name="group_publisher" string="Nhà xuất bản"
+                        context="{'group_by': 'publisher'}" />
                 </group>
             </search>
         </field>
     </record>
 
     <record id="action_library_book" model="ir.actions.act_window">
-        <field name="name">Books</field>
+        <field name="name">Sách</field>
         <field name="res_model">library.book</field>
         <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="search_view_id" ref="view_library_book_search"/>
+        <field name="search_view_id" ref="view_library_book_search" />
     </record>
 </odoo>

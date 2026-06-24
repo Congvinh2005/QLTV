@@ -5,12 +5,12 @@
         <field name="model">library.loan</field>
         <field name="arch" type="xml">
             <tree decoration-danger="state == 'overdue'" decoration-success="state == 'returned'">
-                <field name="name"/>
-                <field name="reader_id"/>
-                <field name="borrow_date"/>
-                <field name="due_date"/>
-                <field name="return_date"/>
-                <field name="state" widget="badge"/>
+                <field name="name" />
+                <field name="reader_id" />
+                <field name="borrow_date" />
+                <field name="due_date" />
+                <field name="return_date" />
+                <field name="state" widget="badge" />
             </tree>
         </field>
     </record>
@@ -20,17 +20,21 @@
         <field name="model">library.loan</field>
         <field name="arch" type="xml">
             <kanban default_group_by="state" class="o_kanban_small_column">
-                <field name="name"/>
-                <field name="reader_id"/>
-                <field name="due_date"/>
-                <field name="state"/>
+                <field name="name" />
+                <field name="reader_id" />
+                <field name="due_date" />
+                <field name="state" />
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <strong><field name="name"/></strong>
-                            <div><field name="reader_id"/></div>
-                            <div>Due: <field name="due_date"/></div>
-                            <field name="state" widget="badge"/>
+                            <strong>
+                                <field name="name" />
+                            </strong>
+                            <div>
+                                <field name="reader_id" />
+                            </div>
+                            <div>Due: <field name="due_date" /></div>
+                            <field name="state" widget="badge" />
                         </div>
                     </t>
                 </templates>
@@ -44,40 +48,44 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_approve" type="object" string="Approve" class="btn-primary" states="draft"/>
-                    <button name="action_borrow" type="object" string="Borrow" class="btn-primary" states="approved"/>
-                    <button name="action_return" type="object" string="Return" class="btn-primary" states="borrowed,overdue"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,borrowed,overdue,returned"/>
+                    <button name="action_approve" type="object" string="Duyệt" class="btn-primary"
+                        states="draft" />
+                    <button name="action_borrow" type="object" string="Mượn" class="btn-primary"
+                        states="approved" />
+                    <button name="action_return" type="object" string="Trả" class="btn-primary"
+                        states="borrowed,overdue" />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,approved,borrowed,overdue,returned" />
                 </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" readonly="1"/>
-                            <field name="reader_id"/>
-                            <field name="borrow_date"/>
-                            <field name="due_date"/>
+                            <field name="name" readonly="1" />
+                            <field name="reader_id" />
+                            <field name="borrow_date" />
+                            <field name="due_date" />
                         </group>
                         <group>
-                            <field name="return_date" readonly="1"/>
-                            <field name="fine_amount"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="return_date" readonly="1" />
+                            <field name="fine_amount" />
+                            <field name="currency_id" invisible="1" />
                         </group>
                     </group>
                     <notebook>
-                        <page string="Books">
+                        <page string="Sách">
                             <field name="line_ids">
                                 <tree editable="bottom">
-                                    <field name="book_id"/>
-                                    <field name="state"/>
+                                    <field name="book_id" />
+                                    <field name="state" />
                                 </tree>
                             </field>
                         </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
                 </div>
             </form>
         </field>
@@ -88,23 +96,23 @@
         <field name="model">library.loan</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
-                <field name="reader_id"/>
-                <filter name="borrowed" string="Borrowed" domain="[('state', '=', 'borrowed')]"/>
-                <filter name="returned" string="Returned" domain="[('state', '=', 'returned')]"/>
-                <filter name="overdue" string="Overdue" domain="[('state', '=', 'overdue')]"/>
-                <group expand="0" string="Group By">
-                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
-                    <filter name="group_reader" string="Reader" context="{'group_by': 'reader_id'}"/>
+                <field name="name" />
+                <field name="reader_id" />
+                <filter name="borrowed" string="Đang mượn" domain="[('state', '=', 'borrowed')]" />
+                <filter name="returned" string="Đã trả" domain="[('state', '=', 'returned')]" />
+                <filter name="overdue" string="Quá hạn" domain="[('state', '=', 'overdue')]" />
+                <group expand="0" string="Nhóm theo">
+                    <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}" />
+                    <filter name="group_reader" string="Bạn đọc" context="{'group_by': 'reader_id'}" />
                 </group>
             </search>
         </field>
     </record>
 
     <record id="action_library_loan" model="ir.actions.act_window">
-        <field name="name">Loans</field>
+        <field name="name">Phiếu mượn</field>
         <field name="res_model">library.loan</field>
         <field name="view_mode">kanban,tree,form,pivot,graph</field>
-        <field name="search_view_id" ref="view_library_loan_search"/>
+        <field name="search_view_id" ref="view_library_loan_search" />
     </record>
 </odoo>

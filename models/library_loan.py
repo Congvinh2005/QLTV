@@ -4,21 +4,21 @@ from odoo.exceptions import UserError
 
 class LibraryLoan(models.Model):
     _name = "library.loan"
-    _description = "Library Loan"
+    _description = "Phiếu mượn"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "borrow_date desc, id desc"
 
-    name = fields.Char(string="Loan Reference", required=True, default="/", copy=False)
-    reader_id = fields.Many2one("library.reader", string="Reader", required=True, tracking=True)
+    name = fields.Char(string="Mã phiếu mượn", required=True, default="/", copy=False)
+    reader_id = fields.Many2one("library.reader", string="Bạn đọc", required=True, tracking=True)
     borrow_date = fields.Date(
-        string="Borrow Date",
+        string="Ngày mượn",
         default=fields.Date.context_today,
         required=True,
         tracking=True,
     )
-    due_date = fields.Date(string="Due Date", required=True, tracking=True)
-    return_date = fields.Date(string="Return Date", tracking=True)
-    fine_amount = fields.Monetary(string="Fine")
+    due_date = fields.Date(string="Ngày hết hạn", required=True, tracking=True)
+    return_date = fields.Date(string="Ngày trả", tracking=True)
+    fine_amount = fields.Monetary(string="Phí phạt")
     currency_id = fields.Many2one(
         "res.currency",
         default=lambda self: self.env.company.currency_id,
@@ -26,17 +26,18 @@ class LibraryLoan(models.Model):
     )
     state = fields.Selection(
         [
-            ("draft", "Draft"),
-            ("approved", "Approved"),
-            ("borrowed", "Borrowed"),
-            ("returned", "Returned"),
-            ("overdue", "Overdue"),
+            ("draft", "Bản nháp"),
+            ("approved", "Đã duyệt"),
+            ("borrowed", "Đang mượn"),
+            ("returned", "Đã trả"),
+            ("overdue", "Quá hạn"),
         ],
+        string="Trạng thái",
         default="draft",
         required=True,
         tracking=True,
     )
-    line_ids = fields.One2many("library.loan.line", "loan_id", string="Books", copy=True)
+    line_ids = fields.One2many("library.loan.line", "loan_id", string="Sách", copy=True)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -52,10 +53,10 @@ class LibraryLoan(models.Model):
     def action_borrow(self):
         for loan in self:
             if not loan.line_ids:
-                raise UserError(_("Please add at least one book."))
+                raise UserError(_("Vui lòng thêm ít nhất một quyển sách."))
             unavailable = loan.line_ids.filtered(lambda line: line.book_id.available_count <= 0)
             if unavailable:
-                raise UserError(_("Some selected books are out of stock."))
+                raise UserError(_("Một số sách đã hết."))
             loan.state = "borrowed"
 
     def action_return(self):

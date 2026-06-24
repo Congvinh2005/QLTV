@@ -1,6 +1,6 @@
 {
-    "name": "Library Management System",
-    "summary": "Manage books, readers, borrowing, returns, dashboard, and reports.",
+    "name": "Hệ thống quản lý thư viện",
+    "summary": "Quản lý sách, bạn đọc, mượn trả, bảng điều khiển và báo cáo.",
     "version": "16.0.1.0.0",
     "category": "Education",
     "author": "QLTV",
@@ -22,10 +22,10 @@
     "assets": {
         "web.assets_backend": [
             "QLTV/static/src/dashboard/library_dashboard.js",
-            "QLTV/static/src/dashboard/library_dashboard.xml",
             "QLTV/static/src/dashboard/library_dashboard.scss",
             "QLTV/static/src/list/library_list_renderer.js",
             "QLTV/static/src/list/library_list_renderer.scss",
+            "QLTV/static/src/**/*.xml",
         ],
     },
     "application": True,

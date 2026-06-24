@@ -3,26 +3,26 @@ from odoo import api, fields, models
 
 class LibraryReader(models.Model):
     _name = "library.reader"
-    _description = "Library Reader"
+    _description = "Bạn đọc"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name"
 
-    code = fields.Char(string="Reader Code", required=True, copy=False, tracking=True)
-    name = fields.Char(string="Full Name", required=True, tracking=True)
+    code = fields.Char(string="Mã người đọc", required=True, copy=False, tracking=True)
+    name = fields.Char(string="Họ tên", required=True, tracking=True)
     email = fields.Char(string="Email")
-    phone = fields.Char(string="Phone")
-    address = fields.Text(string="Address")
+    phone = fields.Char(string="Điện thoại")
+    address = fields.Text(string="Địa chỉ")
     registration_date = fields.Date(
-        string="Registration Date",
+        string="Ngày đăng ký",
         default=fields.Date.context_today,
     )
-    loan_ids = fields.One2many("library.loan", "reader_id", string="Loans")
-    total_loan_count = fields.Integer(compute="_compute_loan_stats", string="Total Loans")
-    current_loan_count = fields.Integer(compute="_compute_loan_stats", string="Borrowing")
-    overdue_loan_count = fields.Integer(compute="_compute_loan_stats", string="Overdue")
+    loan_ids = fields.One2many("library.loan", "reader_id", string="Phiếu mượn")
+    total_loan_count = fields.Integer(compute="_compute_loan_stats", string="Tổng số phiếu mượn")
+    current_loan_count = fields.Integer(compute="_compute_loan_stats", string="Đang mượn")
+    overdue_loan_count = fields.Integer(compute="_compute_loan_stats", string="Quá hạn")
 
     _sql_constraints = [
-        ("code_unique", "unique(code)", "The reader code must be unique."),
+        ("code_unique", "unique(code)", "Mã người đọc phải là duy nhất."),
     ]
 
     @api.depends("loan_ids.state")

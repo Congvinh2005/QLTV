@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
-    <t t-name="QLTV.LibraryDashboard">
+    <t t-name="QLTV.LibraryDashboard" owl="1">
         <div class="o_library_dashboard">
             <div class="o_library_dashboard__grid">
                 <div class="o_library_dashboard__kpi">
-                    <span>Total Books</span>
+                    <span>Tổng sách</span>
                     <strong t-esc="state.kpis.total_books || 0"/>
                 </div>
                 <div class="o_library_dashboard__kpi">
-                    <span>Total Copies</span>
+                    <span>Tổng bản</span>
                     <strong t-esc="state.kpis.total_copies || 0"/>
                 </div>
                 <div class="o_library_dashboard__kpi">
-                    <span>Readers</span>
+                    <span>Độc giả</span>
                     <strong t-esc="state.kpis.total_readers || 0"/>
                 </div>
                 <div class="o_library_dashboard__kpi">
-                    <span>Loans</span>
+                    <span>Phiếu mượn</span>
                     <strong t-esc="state.kpis.total_loans || 0"/>
                 </div>
                 <div class="o_library_dashboard__kpi">
-                    <span>Borrowed</span>
+                    <span>Đang mượn</span>
                     <strong t-esc="state.kpis.borrowed || 0"/>
                 </div>
                 <div class="o_library_dashboard__kpi">
-                    <span>Overdue</span>
+                    <span>Quá hạn</span>
                     <strong t-esc="state.kpis.overdue || 0"/>
                 </div>
                 <div class="o_library_dashboard__kpi">
-                    <span>Returned</span>
+                    <span>Đã trả</span>
                     <strong t-esc="state.kpis.returned || 0"/>
                 </div>
             </div>

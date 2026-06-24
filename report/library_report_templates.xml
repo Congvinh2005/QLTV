@@ -5,24 +5,42 @@
             <t t-foreach="docs" t-as="doc">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <h2>Library Loan Slip</h2>
-                        <p><strong>Reference:</strong> <span t-field="doc.name"/></p>
-                        <p><strong>Reader:</strong> <span t-field="doc.reader_id"/></p>
-                        <p><strong>Borrow Date:</strong> <span t-field="doc.borrow_date"/></p>
-                        <p><strong>Due Date:</strong> <span t-field="doc.due_date"/></p>
+                        <h2>Phiếu mượn thư viện</h2>
+                        <p>
+                            <strong>Mã phiếu:</strong>
+                            <span t-field="doc.name" />
+                        </p>
+                        <p>
+                            <strong>Bạn đọc:</strong>
+                            <span t-field="doc.reader_id" />
+                        </p>
+                        <p>
+                            <strong>Ngày mượn:</strong>
+                            <span t-field="doc.borrow_date" />
+                        </p>
+                        <p>
+                            <strong>Ngày hết hạn:</strong>
+                            <span t-field="doc.due_date" />
+                        </p>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th>Book Code</th>
-                                    <th>Title</th>
-                                    <th>Status</th>
+                                    <th>Mã sách</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Trạng thái</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr t-foreach="doc.line_ids" t-as="line">
-                                    <td><span t-field="line.book_id.code"/></td>
-                                    <td><span t-field="line.book_id.name"/></td>
-                                    <td><span t-field="line.state"/></td>
+                                    <td>
+                                        <span t-field="line.book_id.code" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.book_id.name" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.state" />
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
