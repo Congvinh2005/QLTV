@@ -14,10 +14,14 @@
         "views/library_book_views.xml",
         "views/library_reader_views.xml",
         "views/library_borrow_views.xml",
+        "views/library_return_views.xml",
         "views/dashboard_views.xml",
         "views/menu_views.xml",
+        "data/users_data.xml",
         "report/borrow_report_template.xml",
         "report/borrow_report.xml",
+        "report/return_report_template.xml",
+        "report/return_report.xml",
     ],
     "assets": {
         "web.assets_backend": [
@@ -32,6 +36,9 @@
             "QLTV/static/src/xml/kanban_templates.xml",
         ],
     },
+    "demo": [
+        "demo/demo_data.xml",
+    ],
     "application": True,
     "installable": True,
 }
