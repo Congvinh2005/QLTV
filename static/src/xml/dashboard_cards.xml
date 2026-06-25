@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
+    <t t-name="QLTV.DashboardCards">
+        <div class="o_dashboard_cards">
+            <div class="o_dashboard_card">Card mẫu 1</div>
+            <div class="o_dashboard_card">Card mẫu 2</div>
+        </div>
+    </t>
 </templates>

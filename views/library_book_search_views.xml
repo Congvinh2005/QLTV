@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_library_book_search" model="ir.ui.view">
+        <field name="name">library.book.search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="code" />
+                <field name="author" />
+                <field name="publisher" />
+                <filter name="out_of_stock" string="Hết sách"
+                    domain="[(\'available_count\', '=', 0)]" />
+                <group expand="0" string="Nhóm theo">
+                    <filter name="group_category" string="Thể loại"
+                        context="{'group_by': 'category'}" />
+                    <filter name="group_author" string="Tác giả" context="{'group_by': 'author'}" />
+                    <filter name="group_publisher" string="Nhà xuất bản"
+                        context="{'group_by': 'publisher'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

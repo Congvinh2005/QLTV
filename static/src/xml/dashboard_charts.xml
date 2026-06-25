@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
+    <t t-name="QLTV.DashboardCharts">
+        <div class="o_dashboard_charts">
+            <div>Chart Top 10 sách</div>
+            <div>Chart mượn theo tháng</div>
+        </div>
+    </t>
 </templates>

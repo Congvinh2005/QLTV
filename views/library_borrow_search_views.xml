@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_library_loan_search" model="ir.ui.view">
+        <field name="name">library.loan.search</field>
+        <field name="model">library.loan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="reader_id" />
+                <filter name="borrowed" string="Đang mượn" domain="[('state', '=', 'borrowed')]" />
+                <filter name="returned" string="Đã trả" domain="[('state', '=', 'returned')]" />
+                <filter name="overdue" string="Quá hạn" domain="[('state', '=', 'overdue')]" />
+                <group expand="0" string="Nhóm theo">
+                    <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}" />
+                    <filter name="group_reader" string="Bạn đọc" context="{'group_by': 'reader_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>
