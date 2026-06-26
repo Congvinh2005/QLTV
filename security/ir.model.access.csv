@@ -7,6 +7,10 @@ access_library_loan_internal,library.loan.internal,model_library_loan,base.group
 access_library_loan_user,library.loan.user,model_library_loan,group_library_user,1,1,1,0
 access_library_loan_line_internal,library.loan.line.internal,model_library_loan_line,base.group_user,1,1,1,0
 access_library_loan_line_user,library.loan.line.user,model_library_loan_line,group_library_user,1,1,1,0
+access_library_book_reader,library.book.reader,model_library_book,group_library_reader,1,0,0,0
+access_library_reader_reader,library.reader.reader,model_library_reader,group_library_reader,1,0,0,0
+access_library_loan_reader,library.loan.reader,model_library_loan,group_library_reader,1,1,1,0
+access_library_loan_line_reader,library.loan.line.reader,model_library_loan_line,group_library_reader,1,1,1,0
 access_library_book_manager,library.book.manager,model_library_book,group_library_manager,1,1,1,1
 access_library_reader_manager,library.reader.manager,model_library_reader,group_library_manager,1,1,1,1
 access_library_loan_manager,library.loan.manager,model_library_loan,group_library_manager,1,1,1,1

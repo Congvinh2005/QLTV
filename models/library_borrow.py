@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -9,14 +11,21 @@ class LibraryLoan(models.Model):
     _order = "borrow_date desc, id desc"
 
     name = fields.Char(string="Mã phiếu mượn", required=True, default="/", copy=False)
-    reader_id = fields.Many2one("library.reader", string="Bạn đọc", required=True, tracking=True)
+    reader_id = fields.Many2one(
+        "library.reader", string="Bạn đọc", required=True, tracking=True,
+        default=lambda self: self._default_reader_id(),
+    )
     borrow_date = fields.Date(
         string="Ngày mượn",
         default=fields.Date.context_today,
         required=True,
         tracking=True,
     )
-    due_date = fields.Date(string="Ngày hết hạn", required=True, tracking=True)
+    borrow_days = fields.Integer(string="Số ngày mượn", compute="_compute_borrow_days", store=True)
+    due_date = fields.Date(
+        string="Ngày hết hạn", compute="_compute_due_date", store=True,
+        tracking=True,
+    )
     return_date = fields.Date(string="Ngày trả", tracking=True)
     borrow_fee = fields.Monetary(
         string="Phí mượn",
@@ -53,17 +62,54 @@ class LibraryLoan(models.Model):
     )
     line_ids = fields.One2many("library.loan.line", "loan_id", string="Sách", copy=True)
 
+    @api.depends("borrow_date", "return_date")
+    def _compute_borrow_days(self):
+        for loan in self:
+            if loan.borrow_date and loan.return_date and loan.return_date > loan.borrow_date:
+                loan.borrow_days = (loan.return_date - loan.borrow_date).days
+            else:
+                loan.borrow_days = 0
+
+    @api.depends("borrow_date", "borrow_days")
+    def _compute_due_date(self):
+        for loan in self:
+            if loan.borrow_date and loan.borrow_days:
+                loan.due_date = loan.borrow_date + timedelta(days=loan.borrow_days)
+            else:
+                loan.due_date = False
+
     @api.depends("borrow_fee", "fine_amount")
     def _compute_total_amount(self):
         for loan in self:
             loan.total_amount = (loan.borrow_fee or 0) + (loan.fine_amount or 0)
 
+    @api.model
+    def _default_reader_id(self):
+        reader = self.env["library.reader"].search([("user_id", "=", self.env.uid)], limit=1)
+        if reader:
+            return reader.id
+        if self.env.user.has_group("QLTV.group_library_reader"):
+            user = self.env.user
+            reader = self.env["library.reader"].create({
+                "code": user.login.upper(),
+                "name": user.name,
+                "email": user.email or "",
+                "user_id": user.id,
+            })
+            return reader.id
+        return False
+
     @api.model_create_multi
     def create(self, vals_list):
+        today = fields.Date.today()
         sequence = self.env["ir.sequence"]
         for vals in vals_list:
             if vals.get("name", "/") == "/":
                 vals["name"] = sequence.next_by_code("library.loan") or "/"
+            if not vals.get("borrow_date"):
+                vals["borrow_date"] = today
+            if not vals.get("reader_id"):
+                vals["reader_id"] = self._default_reader_id()
         return super().create(vals_list)
 
     def action_approve(self):

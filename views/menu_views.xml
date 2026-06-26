@@ -11,4 +11,11 @@
     <menuitem id="menu_library_loans" name="Quản lý Mượn trả" parent="menu_library_root"
         action="action_library_loan" sequence="40" groups="group_library_user" />
 
+    <!-- Reader self-service -->
+    <menuitem id="menu_reader_root" name="Bạn đọc" sequence="10" groups="group_library_reader" />
+    <menuitem id="menu_reader_books" name="Danh mục sách" parent="menu_reader_root"
+        action="action_reader_book" sequence="10" groups="group_library_reader" />
+    <menuitem id="menu_reader_my_loans" name="Phiếu mượn của tôi" parent="menu_reader_root"
+        action="action_reader_loan" sequence="20" groups="group_library_reader" />
+
 </odoo>

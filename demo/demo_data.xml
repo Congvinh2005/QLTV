@@ -48,11 +48,34 @@
         <field name="shelf_location">Kệ B-01</field>
     </record>
 
-    <!-- Bạn đọc mẫu -->
+    <!-- Bạn đọc mẫu (có tài khoản đăng nhập) -->
+    <record id="user_library_reader" model="res.users">
+        <field name="login">reader</field>
+        <field name="password">reader</field>
+        <field name="name">Phạm Văn D</field>
+        <field name="groups_id" eval="[(4, ref('group_library_reader'))]" />
+    </record>
+
     <record id="reader_1" model="library.reader">
         <field name="code">RD001</field>
         <field name="name">Phạm Văn D</field>
         <field name="email">phamvand@email.com</field>
         <field name="phone">0901234567</field>
+        <field name="user_id" ref="user_library_reader" />
+    </record>
+
+    <!-- Phiếu mượn quá hạn mẫu -->
+    <record id="loan_overdue_demo" model="library.loan">
+        <field name="name">LOAN/DEMO/001</field>
+        <field name="reader_id" ref="reader_1" />
+        <field name="borrow_date">2026-06-01</field>
+        <field name="return_date">2026-06-10</field>
+        <field name="borrow_fee">15000</field>
+        <field name="state">borrowed</field>
+    </record>
+
+    <record id="loan_overdue_line_demo" model="library.loan.line">
+        <field name="loan_id" ref="loan_overdue_demo" />
+        <field name="book_id" ref="book_1" />
     </record>
 </odoo>

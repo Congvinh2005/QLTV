@@ -10,10 +10,12 @@
     "data": [
         "security/library_security.xml",
         "security/ir.model.access.csv",
+        "security/library_record_rules.xml",
         "data/cron_data.xml",
         "views/library_book_views.xml",
         "views/library_reader_views.xml",
         "views/library_borrow_views.xml",
+        "views/library_reader_views_self.xml",
         "views/dashboard_views.xml",
         "views/menu_views.xml",
         "data/users_data.xml",

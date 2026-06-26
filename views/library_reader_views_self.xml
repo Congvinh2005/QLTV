@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Reader: danh sách sách (chỉ xem) -->
+    <record id="view_reader_book_tree" model="ir.ui.view">
+        <field name="name">reader.book.tree</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false">
+                <field name="code" />
+                <field name="name" />
+                <field name="author" />
+                <field name="category" />
+                <field name="available_count" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_reader_book_form" model="ir.ui.view">
+        <field name="name">reader.book.form</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="cover_image" widget="image" class="oe_avatar" />
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="author" />
+                            <field name="category" />
+                        </group>
+                        <group>
+                            <field name="available_count" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_reader_book_search" model="ir.ui.view">
+        <field name="name">reader.book.search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="author" />
+                <field name="category" />
+                <filter name="in_stock" string="Còn sách" domain="[('available_count', '>', 0)]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_reader_book" model="ir.actions.act_window">
+        <field name="name">Danh mục sách</field>
+        <field name="res_model">library.book</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_reader_book_search" />
+        <field name="binding_model_id" ref="model_library_book" />
+        <field name="groups_id" eval="[(4, ref('group_library_reader'))]" />
+    </record>
+
+    <!-- Reader: danh sách phiếu mượn của tôi -->
+    <record id="view_reader_loan_tree" model="ir.ui.view">
+        <field name="name">reader.loan.tree</field>
+        <field name="model">library.loan</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="reader_id" />
+                <field name="borrow_date" />
+                <field name="return_date" />
+                <field name="due_date" />
+                <field name="state" widget="badge" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_reader_loan_form" model="ir.ui.view">
+        <field name="name">reader.loan.form</field>
+        <field name="model">library.loan</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1" />
+                        <field name="reader_id" readonly="1" options="{'no_create': True, 'no_create_edit': True}" />
+                        <field name="borrow_date" readonly="1" />
+                        <field name="return_date" />
+                        <field name="state" widget="badge" readonly="1" />
+                    </group>
+                    <notebook>
+                        <page string="Sách">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="book_id" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_reader_loan" model="ir.actions.act_window">
+        <field name="name">Phiếu mượn của tôi</field>
+        <field name="res_model">library.loan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="binding_model_id" ref="model_library_loan" />
+        <field name="groups_id" eval="[(4, ref('group_library_reader'))]" />
+    </record>
+
+</odoo>

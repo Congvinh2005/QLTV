@@ -11,6 +11,7 @@ class LibraryReader(models.Model):
     name = fields.Char(string="Họ tên", required=True, tracking=True)
     email = fields.Char(string="Email")
     phone = fields.Char(string="Điện thoại")
+    user_id = fields.Many2one("res.users", string="Tài khoản đăng nhập")
     address = fields.Text(string="Địa chỉ")
     registration_date = fields.Date(
         string="Ngày đăng ký",
