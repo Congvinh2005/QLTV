@@ -316,3 +316,11 @@ Module giúp thực hành:
 * Custom JavaScript.
 * RPC Service.
 * Asset Management.
+
+Name: Odoo16 Local
+
+Host name/address: host.docker.internal
+Port: 5432
+Maintenance database: postgres
+Username: odoo
+Password: (mật khẩu của user odoo)
