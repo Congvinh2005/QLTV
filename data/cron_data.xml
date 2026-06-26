@@ -7,6 +7,11 @@
         <field name="padding">5</field>
     </record>
 
+    <record id="overdue_fee_per_day" model="ir.config_parameter">
+        <field name="key">qltv.overdue_fee_per_day</field>
+        <field name="value">1000</field>
+    </record>
+
     <record id="ir_cron_library_overdue" model="ir.cron">
         <field name="name">Thư viện: Kiểm tra phiếu mượn quá hạn</field>
         <field name="model_id" ref="model_library_loan" />

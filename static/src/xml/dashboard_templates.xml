@@ -32,6 +32,20 @@
                     <strong t-esc="state.kpis.returned || 0"/>
                 </div>
             </div>
+            <div class="o_library_dashboard__grid o_library_dashboard__revenue">
+                <div class="o_library_dashboard__kpi o_dashboard_kpi__revenue">
+                    <span>Tổng doanh thu</span>
+                    <strong t-esc="state.kpis.total_revenue || 0"/>
+                </div>
+                <div class="o_library_dashboard__kpi o_dashboard_kpi__revenue">
+                    <span>Doanh thu hôm nay</span>
+                    <strong t-esc="state.kpis.revenue_today || 0"/>
+                </div>
+                <div class="o_library_dashboard__kpi o_dashboard_kpi__revenue">
+                    <span>Doanh thu tháng này</span>
+                    <strong t-esc="state.kpis.revenue_month || 0"/>
+                </div>
+            </div>
         </div>
     </t>
 </templates>

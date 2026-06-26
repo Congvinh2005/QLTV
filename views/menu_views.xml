@@ -2,14 +2,13 @@
 <odoo>
     <menuitem id="menu_library_root" name="Thư viện" sequence="10"
         web_icon="QLTV/static/src/img/icon.png" />
-    <menuitem id="menu_library_dashboard" name="Bảng điều khiển" parent="menu_library_root"
+    <menuitem id="menu_library_dashboard" name="Dashboard" parent="menu_library_root"
         action="action_library_dashboard" sequence="10" groups="group_library_user" />
-    <menuitem id="menu_library_books" name="Sách" parent="menu_library_root"
+    <menuitem id="menu_library_books" name="Quản lý Sách" parent="menu_library_root"
         action="action_library_book" sequence="20" groups="group_library_user" />
-    <menuitem id="menu_library_readers" name="Độc giả" parent="menu_library_root"
+    <menuitem id="menu_library_readers" name="Quản lý Độc giả" parent="menu_library_root"
         action="action_library_reader" sequence="30" groups="group_library_user" />
-    <menuitem id="menu_library_loans" name="Mượn sách" parent="menu_library_root"
+    <menuitem id="menu_library_loans" name="Quản lý Mượn trả" parent="menu_library_root"
         action="action_library_loan" sequence="40" groups="group_library_user" />
-    <menuitem id="menu_library_returns" name="Trả sách" parent="menu_library_root"
-        action="action_library_return" sequence="50" groups="group_library_user" />
+
 </odoo>

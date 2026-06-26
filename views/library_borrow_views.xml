@@ -10,6 +10,9 @@
                 <field name="borrow_date" />
                 <field name="due_date" />
                 <field name="return_date" />
+                <field name="borrow_fee" />
+                <field name="fine_amount" />
+                <field name="total_amount" sum="Tổng" />
                 <field name="state" widget="badge" />
             </tree>
         </field>
@@ -66,9 +69,13 @@
                             <field name="due_date" />
                         </group>
                         <group>
-                            <field name="return_date" readonly="1" />
-                            <field name="fine_amount" />
+                            <field name="borrow_fee" />
+                            <field name="fine_amount" readonly="1" />
+                            <field name="total_amount" readonly="1" />
                             <field name="currency_id" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="return_date" readonly="1" />
                         </group>
                     </group>
                     <notebook>
@@ -110,7 +117,7 @@
     </record>
 
     <record id="action_library_loan" model="ir.actions.act_window">
-        <field name="name">Phiếu mượn</field>
+        <field name="name">Mượn trả</field>
         <field name="res_model">library.loan</field>
         <field name="view_mode">kanban,tree,form,pivot,graph</field>
         <field name="search_view_id" ref="view_library_loan_search" />
