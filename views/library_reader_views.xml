@@ -70,10 +70,40 @@
         </field>
     </record>
 
+    <record id="view_library_reader_kanban" model="ir.ui.view">
+        <field name="name">library.reader.kanban</field>
+        <field name="model">library.reader</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column">
+                <field name="name" />
+                <field name="email" />
+                <field name="current_loan_count" />
+                <field name="overdue_loan_count" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div><field name="email"/></div>
+                            <div>
+                                <span class="badge badge-pill badge-info">
+                                    Đang mượn: <field name="current_loan_count"/>
+                                </span>
+                                <span t-if="record.overdue_loan_count.raw_value > 0"
+                                    class="badge badge-pill badge-danger ml-1">
+                                    Quá hạn: <field name="overdue_loan_count"/>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="action_library_reader" model="ir.actions.act_window">
         <field name="name">Bạn đọc</field>
         <field name="res_model">library.reader</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="view_library_reader_search" />
     </record>
 </odoo>

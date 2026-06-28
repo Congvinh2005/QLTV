@@ -3,6 +3,33 @@ from odoo.http import request
 
 
 class LibraryDashboardController(http.Controller):
+
+    @http.route("/library/kanban/stats", type="json", auth="user")
+    def kanban_stats(self, model):
+        Book = request.env["library.book"].sudo()
+        Reader = request.env["library.reader"].sudo()
+        Loan = request.env["library.loan"].sudo()
+        if model == "library.book":
+            return {
+                "total": Book.search_count([]),
+                "available": sum(Book.search([]).mapped("available_count")),
+                "borrowed": sum(Book.search([]).mapped("borrowed_count")),
+                "out_of_stock": Book.search_count([("available_count", "=", 0)]),
+            }
+        if model == "library.reader":
+            return {
+                "total": Reader.search_count([]),
+                "borrowing": Reader.search_count([("current_loan_count", ">", 0)]),
+                "overdue": Reader.search_count([("overdue_loan_count", ">", 0)]),
+            }
+        if model == "library.loan":
+            return {
+                "total": Loan.search_count([]),
+                "borrowed": Loan.search_count([("state", "=", "borrowed")]),
+                "returned": Loan.search_count([("state", "=", "returned")]),
+                "overdue": Loan.search_count([("state", "=", "overdue")]),
+            }
+        return {}
     @http.route("/my", type="http", auth="user", website=True)
     def my_home(self):
         if request.env.user.has_group("QLTV.group_library_user"):

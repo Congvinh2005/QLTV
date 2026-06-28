@@ -6,3 +6,28 @@
     color: #aaa;
     font-style: italic;
 }
+
+.o_library_kanban .dashboard_card.total {
+    background: #EAF4FF;
+}
+
+.o_library_kanban .dashboard_card.available {
+    background: #E9F9EE;
+}
+
+.o_library_kanban .dashboard_card.borrowed,
+.o_library_kanban .dashboard_card.borrowing {
+    background: #FFF8DD;
+}
+
+.o_library_kanban .dashboard_card.out_of_stock {
+    background: #FFEAEA;
+}
+
+.o_library_kanban .dashboard_card.overdue {
+    background: #FFEAEA;
+}
+
+.o_library_kanban .dashboard_card.returned {
+    background: #F5F5F5;
+}

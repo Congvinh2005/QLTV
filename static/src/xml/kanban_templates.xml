@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
-    <t t-name="QLTV.KanbanTemplates">
-        <div>Template Kanban mở rộng</div>
+
+    <t t-name="QLTV.LibraryKanbanRenderer" owl="1">
+        <div class="o_kanban_renderer o_renderer d-flex"
+            t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }} {{ props.archInfo.className or '' }}"
+            t-att-class="{ 'o_kanban_has_nocontent': showNoContentHelper }"
+            t-ref="root">
+
+            <div class="w-100 px-3 pt-3" t-if="statCards.length">
+                <div class="dashboard_row">
+                    <div class="dashboard_card"
+                        t-foreach="statCards" t-as="card" t-key="card.key"
+                        t-att-class="'dashboard_card ' + card.key"
+                        style="min-width:130px;padding:14px;margin-bottom:8px;cursor:default;">
+                        <div class="content" style="width:100%;margin:0;text-align:center;">
+                            <div class="number" style="font-size:24px;" t-esc="card.value"/>
+                            <div class="title" style="font-size:13px;margin-top:2px;" t-esc="card.label"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
+                <t t-if="groupOrRecord.group">
+                    <t t-set="group" t-value="groupOrRecord.group"/>
+                    <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0"
+                        t-att-class="getGroupClasses(group)"
+                        t-att-data-id="(canResequenceRecords or canResequenceGroups) and group.id"
+                        t-on-click="(ev) => this.onGroupClick(group, ev)">
+                        <div class="o_kanban_header top-0"
+                            t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-3' : 'py-3' }}">
+                            <div class="o_kanban_header_title d-flex align-items-center lh-lg text-900">
+                                <span class="o_column_title flex-grow-1 text-truncate fs-4 fw-bold"
+                                    t-att="tooltipAttributes(group)"
+                                    t-esc="getGroupName(group)"/>
+                            </div>
+                        </div>
+                        <t t-if="!group.isFolded">
+                            <t t-foreach="group.list.records" t-as="record" t-key="record.id">
+                                <KanbanRecord
+                                    archInfo="props.archInfo"
+                                    Compiler="props.Compiler"
+                                    canResequence="canResequenceRecords"
+                                    forceGlobalClick="props.forceGlobalClick"
+                                    group="group"
+                                    list="props.list"
+                                    openRecord="props.openRecord"
+                                    readonly="props.readonly"
+                                    record="record"
+                                    templates="props.archInfo.templateDocs"/>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <KanbanRecord
+                        archInfo="props.archInfo"
+                        Compiler="props.Compiler"
+                        canResequence="canResequenceRecords"
+                        forceGlobalClick="props.forceGlobalClick"
+                        list="props.list"
+                        openRecord="props.openRecord"
+                        readonly="props.readonly"
+                        record="groupOrRecord.record"
+                        templates="props.archInfo.templateDocs"/>
+                </t>
+            </t>
+
+        </div>
     </t>
+
 </templates>
