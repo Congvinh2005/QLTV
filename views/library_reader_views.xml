@@ -45,9 +45,35 @@
         </field>
     </record>
 
+    <record id="view_library_reader_search" model="ir.ui.view">
+        <field name="name">library.reader.search</field>
+        <field name="model">library.reader</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="email" />
+                <field name="phone" />
+                <field name="code" />
+                <separator />
+                <filter name="filter_borrowing" string="Đang mượn"
+                    domain="[('current_loan_count', '>', 0)]" />
+                <filter name="filter_overdue" string="Quá hạn"
+                    domain="[('overdue_loan_count', '>', 0)]" />
+                <separator />
+                <group expand="0" string="Nhóm theo">
+                    <filter name="group_registration" string="Ngày đăng ký"
+                        context="{'group_by': 'registration_date'}" />
+                    <filter name="group_user" string="Tài khoản"
+                        context="{'group_by': 'user_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="action_library_reader" model="ir.actions.act_window">
         <field name="name">Bạn đọc</field>
         <field name="res_model">library.reader</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_library_reader_search" />
     </record>
 </odoo>

@@ -18,9 +18,9 @@ class LibraryReader(models.Model):
         default=fields.Date.context_today,
     )
     loan_ids = fields.One2many("library.loan", "reader_id", string="Phiếu mượn")
-    total_loan_count = fields.Integer(compute="_compute_loan_stats", string="Tổng số phiếu mượn")
-    current_loan_count = fields.Integer(compute="_compute_loan_stats", string="Đang mượn")
-    overdue_loan_count = fields.Integer(compute="_compute_loan_stats", string="Quá hạn")
+    total_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Tổng số phiếu mượn")
+    current_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Đang mượn")
+    overdue_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Quá hạn")
 
     _sql_constraints = [
         ("code_unique", "unique(code)", "Mã người đọc phải là duy nhất."),

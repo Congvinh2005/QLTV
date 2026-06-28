@@ -324,3 +324,6 @@ Port: 5432
 Maintenance database: postgres
 Username: odoo
 Password: (mật khẩu của user odoo)
+
+cd /Users/vinhdv/odoo-dev/odoo16
+/Users/vinhdv/miniconda3/envs/odoo16/bin/python /Users/vinhdv/odoo-dev/odoo16/odoo-bin -c ~/.odoo/odoo16.conf -d odoo16_db -u QLTV
