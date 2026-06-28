@@ -10,10 +10,10 @@
                 <field name="name" />
                 <field name="author" />
                 <field name="category" />
-                <field name="quantity_total" />
-                <field name="borrowed_count" />
-                <field name="available_count" />
-                <field name="total_borrow_count" />
+                <field name="quantity_total" sum="Tổng số bản" />
+                <field name="borrowed_count" sum="Đang mượn" />
+                <field name="available_count" sum="Có sẵn" />
+                <field name="total_borrow_count" sum="Tổng lượt mượn" />
             </tree>
         </field>
     </record>
@@ -60,7 +60,13 @@
                 <field name="code" />
                 <field name="author" />
                 <field name="publisher" />
+                <field name="category" />
+                <field name="isbn" />
+                <separator />
                 <filter name="out_of_stock" string="Hết sách" domain="[('available_count', '=', 0)]" />
+                <filter name="available" string="Còn sách" domain="[('available_count', '>', 0)]" />
+                <filter name="low_stock" string="Sắp hết" domain="[('available_count', '>', 0), ('available_count', '&lt;=', 2)]" />
+                <separator />
                 <group expand="0" string="Nhóm theo">
                     <filter name="group_category" string="Thể loại"
                         context="{'group_by': 'category'}" />
