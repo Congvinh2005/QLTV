@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -15,18 +15,18 @@ class LibraryLoan(models.Model):
         "library.reader", string="Bạn đọc", required=True, tracking=True,
         default=lambda self: self._default_reader_id(),
     )
-    borrow_date = fields.Date(
+    borrow_date = fields.Datetime(
         string="Ngày mượn",
-        default=fields.Date.context_today,
+        default=fields.Datetime.now,
         required=True,
         tracking=True,
     )
     borrow_days = fields.Integer(string="Số ngày mượn", compute="_compute_borrow_days", store=True)
-    due_date = fields.Date(
+    due_date = fields.Datetime(
         string="Ngày hết hạn", compute="_compute_due_date", store=True,
         tracking=True,
     )
-    return_date = fields.Date(string="Ngày trả", tracking=True)
+    return_date = fields.Datetime(string="Ngày trả", tracking=True)
     borrow_fee = fields.Monetary(
         string="Phí mượn",
         currency_field="currency_id",
@@ -74,7 +74,11 @@ class LibraryLoan(models.Model):
     def _compute_due_date(self):
         for loan in self:
             if loan.borrow_date and loan.borrow_days:
-                loan.due_date = loan.borrow_date + timedelta(days=loan.borrow_days)
+                bd = loan.borrow_date
+                if isinstance(bd, datetime):
+                    loan.due_date = bd.replace(hour=23, minute=59, second=59) + timedelta(days=loan.borrow_days - 1)
+                else:
+                    loan.due_date = bd + timedelta(days=loan.borrow_days)
             else:
                 loan.due_date = False
 
@@ -101,7 +105,7 @@ class LibraryLoan(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        today = fields.Date.today()
+        today = fields.Datetime.now()
         sequence = self.env["ir.sequence"]
         for vals in vals_list:
             if vals.get("name", "/") == "/":
@@ -130,11 +134,13 @@ class LibraryLoan(models.Model):
         return int(self.env["ir.config_parameter"].sudo().get_param("qltv.overdue_fee_per_day", "1000"))
 
     def action_return(self):
-        today = fields.Date.context_today(self)
+        today = fields.Datetime.now()
         for loan in self:
             overdue_days = 0
             if loan.due_date and today > loan.due_date:
-                overdue_days = (today - loan.due_date).days
+                bd = loan.borrow_date.date() if loan.borrow_date else today.date()
+                dd = loan.due_date.date() if loan.due_date else today.date()
+                overdue_days = (today.date() - dd).days
             fine = 0
             if overdue_days > 0:
                 fine = overdue_days * self._get_overdue_fee_per_day()
@@ -145,10 +151,12 @@ class LibraryLoan(models.Model):
             })
 
     def action_check_overdue(self):
-        today = fields.Date.context_today(self)
+        today = fields.Datetime.now()
         loans = self.search([("state", "=", "borrowed"), ("due_date", "<", today)])
         for loan in loans:
-            overdue_days = (today - loan.due_date).days
+            bd = loan.borrow_date.date() if loan.borrow_date else today.date()
+            dd = loan.due_date.date() if loan.due_date else today.date()
+            overdue_days = (today.date() - dd).days
             fine = overdue_days * self._get_overdue_fee_per_day()
             loan.write({
                 "state": "overdue",

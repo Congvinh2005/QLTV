@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="QLTV.VnDatetimeField" owl="1">
+        <span class="o_field_vn_datetime" t-esc="formattedValue" />
+    </t>
+
+    <t t-name="QLTV.VnMoneyField" owl="1">
+        <input type="text"
+            t-att-placeholder="'0đ'"
+            t-att-value="formattedValue"
+            t-on-focus="onFocus"
+            t-on-blur="onBlur"
+            t-on-input="onInput"
+            class="o_field_vn_money form-control"
+            t-att-readonly="props.readonly ? true : undefined"
+        />
+    </t>
+</templates>

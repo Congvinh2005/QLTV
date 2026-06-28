@@ -33,6 +33,9 @@
             "QLTV/static/src/xml/dashboard_cards.xml",
             "QLTV/static/src/xml/dashboard_charts.xml",
             "QLTV/static/src/xml/kanban_templates.xml",
+            "QLTV/static/src/js/vn_money_widget.js",
+            "QLTV/static/src/js/vn_datetime_widget.js",
+            "QLTV/static/src/xml/widget_templates.xml",
         ],
     },
     "demo": [

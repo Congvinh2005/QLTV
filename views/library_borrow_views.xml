@@ -7,12 +7,12 @@
             <tree decoration-danger="state == 'overdue'" decoration-success="state == 'returned'">
                 <field name="name" />
                 <field name="reader_id" />
-                <field name="borrow_date" />
-                <field name="return_date" />
-                <field name="due_date" />
-                <field name="borrow_fee" />
-                <field name="fine_amount" />
-                <field name="total_amount" sum="Tổng" />
+                <field name="borrow_date" widget="vn_datetime" />
+                <field name="return_date" widget="vn_datetime" />
+                <field name="due_date" widget="vn_datetime" />
+                <field name="borrow_fee" widget="vn_money" sum="Phí mượn" />
+                <field name="fine_amount" widget="vn_money" sum="Phí phạt" />
+                <field name="total_amount" widget="vn_money" sum="Tổng" />
                 <field name="state" widget="badge" />
             </tree>
         </field>
@@ -69,10 +69,10 @@
                             <field name="return_date" />
                         </group>
                         <group>
-                            <field name="borrow_fee" />
-                            <field name="fine_amount" readonly="1" />
-                            <field name="total_amount" readonly="1" />
-                            <field name="due_date" readonly="1" />
+                            <field name="borrow_fee" widget="vn_money" />
+                            <field name="fine_amount" widget="vn_money" readonly="1" />
+                            <field name="total_amount" widget="vn_money" readonly="1" />
+                            <field name="due_date" widget="vn_datetime" readonly="1" />
                             <field name="currency_id" invisible="1" />
                         </group>
                     </group>
@@ -103,12 +103,26 @@
             <search>
                 <field name="name" />
                 <field name="reader_id" />
+                <field name="borrow_fee" />
+                <field name="fine_amount" />
+                <field name="total_amount" />
                 <filter name="borrowed" string="Đang mượn" domain="[('state', '=', 'borrowed')]" />
                 <filter name="returned" string="Đã trả" domain="[('state', '=', 'returned')]" />
                 <filter name="overdue" string="Quá hạn" domain="[('state', '=', 'overdue')]" />
+                <separator />
+                <filter name="filter_today" string="Hôm nay"
+                    domain="[('borrow_date', '&gt;=', datetime.datetime.today().replace(hour=0, minute=0, second=0)), ('borrow_date', '&lt;=', datetime.datetime.today().replace(hour=23, minute=59, second=59))]"
+                    help="Phiếu mượn trong ngày" />
+                <filter name="filter_revenue_today" string="Doanh thu hôm nay"
+                    domain="[('return_date', '&gt;=', datetime.datetime.today().replace(hour=0, minute=0, second=0)), ('return_date', '&lt;=', datetime.datetime.today().replace(hour=23, minute=59, second=59)), ('state', 'in', ('returned', 'overdue'))]" />
+                <separator />
+                <filter name="filter_borrow_date" string="Ngày mượn" date="borrow_date" />
+                <filter name="filter_return_date" string="Ngày trả" date="return_date" />
                 <group expand="0" string="Nhóm theo">
                     <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}" />
                     <filter name="group_reader" string="Bạn đọc" context="{'group_by': 'reader_id'}" />
+                    <filter name="group_borrow_date" string="Ngày mượn" context="{'group_by': 'borrow_date'}" />
+                    <filter name="group_return_date" string="Ngày trả" context="{'group_by': 'return_date'}" />
                 </group>
             </search>
         </field>
