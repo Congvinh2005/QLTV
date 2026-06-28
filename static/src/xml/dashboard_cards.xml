@@ -1,9 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
-    <t t-name="QLTV.DashboardCards">
-        <div class="o_dashboard_cards">
-            <div class="o_dashboard_card">Card mẫu 1</div>
-            <div class="o_dashboard_card">Card mẫu 2</div>
+
+    <t t-name="QLTV.DashboardCards" owl="1">
+        <div class="o_library_dashboard">
+            <!-- Sách -->
+            <div class="dashboard_row" t-if="dashboardState.modelName === 'library.book'">
+                <div class="dashboard_card blue">
+                    <div class="icon"><i class="fa fa-book"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.total_books || 0"/>
+                        <div class="title">Tổng sách</div>
+                    </div>
+                </div>
+                <div class="dashboard_card teal">
+                    <div class="icon"><i class="fa fa-copy"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.total_copies || 0"/>
+                        <div class="title">Tổng bản</div>
+                    </div>
+                </div>
+                <div class="dashboard_card purple">
+                    <div class="icon"><i class="fa fa-check"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.available || 0"/>
+                        <div class="title">Có sẵn</div>
+                    </div>
+                </div>
+                <div class="dashboard_card yellow">
+                    <div class="icon"><i class="fa fa-exchange"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.borrowed || 0"/>
+                        <div class="title">Đang mượn</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Độc giả -->
+            <div class="dashboard_row" t-if="dashboardState.modelName === 'library.reader'">
+                <div class="dashboard_card green">
+                    <div class="icon"><i class="fa fa-users"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.total_readers || 0"/>
+                        <div class="title">Độc giả</div>
+                    </div>
+                </div>
+                <div class="dashboard_card yellow">
+                    <div class="icon"><i class="fa fa-exchange"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.borrowed || 0"/>
+                        <div class="title">Đang mượn</div>
+                    </div>
+                </div>
+                <div class="dashboard_card red">
+                    <div class="icon"><i class="fa fa-warning"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.overdue || 0"/>
+                        <div class="title">Quá hạn</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mượn trả -->
+            <div class="dashboard_row" t-if="dashboardState.modelName === 'library.loan'">
+                <div class="dashboard_card orange">
+                    <div class="icon"><i class="fa fa-ticket"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.total_loans || 0"/>
+                        <div class="title">Phiếu mượn</div>
+                    </div>
+                </div>
+                <div class="dashboard_card yellow">
+                    <div class="icon"><i class="fa fa-exchange"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.borrowed || 0"/>
+                        <div class="title">Đang mượn</div>
+                    </div>
+                </div>
+                <div class="dashboard_card gray">
+                    <div class="icon"><i class="fa fa-undo"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.returned || 0"/>
+                        <div class="title">Đã trả</div>
+                    </div>
+                </div>
+                <div class="dashboard_card red">
+                    <div class="icon"><i class="fa fa-warning"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.overdue || 0"/>
+                        <div class="title">Quá hạn</div>
+                    </div>
+                </div>
+                <div class="dashboard_card teal">
+                    <div class="icon"><i class="fa fa-dollar"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.revenue_today || 0"/>
+                        <div class="title">DT hôm nay</div>
+                    </div>
+                </div>
+                <div class="dashboard_card purple">
+                    <div class="icon"><i class="fa fa-calendar-check-o"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.revenue_month || 0"/>
+                        <div class="title">DT tháng này</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
+
 </templates>

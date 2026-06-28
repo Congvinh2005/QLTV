@@ -2,10 +2,10 @@
 
 import { registry } from "@web/core/registry";
 import { onWillStart, useState } from "@odoo/owl";
-import { KanbanController } from "@web/views/kanban/kanban_controller";
-import "@web/views/kanban/kanban_view";
+import { GraphController } from "@web/views/graph/graph_controller";
+import "@web/views/graph/graph_view";
 
-export class LibraryKanbanController extends KanbanController {
+export class LibraryGraphController extends GraphController {
     setup() {
         super.setup();
         this.dashboardState = useState({
@@ -19,17 +19,17 @@ export class LibraryKanbanController extends KanbanController {
                     const data = await this.env.services.rpc("/library/dashboard/data", {});
                     this.dashboardState.kpis = data;
                 } catch (e) {
-                    console.error("QLTV Dashboard kanban load error:", e);
+                    console.error("QLTV Dashboard graph load error:", e);
                 }
             });
         }
     }
 }
 
-LibraryKanbanController.template = "QLTV.LibraryKanbanView";
+LibraryGraphController.template = "QLTV.LibraryGraphView";
 
-const kanbanView = registry.category("views").get("kanban");
-registry.category("views").add("kanban", {
-    ...kanbanView,
-    Controller: LibraryKanbanController,
+const graphView = registry.category("views").get("graph");
+registry.category("views").add("graph", {
+    ...graphView,
+    Controller: LibraryGraphController,
 }, { force: true });

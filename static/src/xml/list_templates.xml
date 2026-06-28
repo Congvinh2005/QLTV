@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="QLTV.LibraryListView" owl="1">
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                <t t-set-slot="layout-buttons">
+                    <t t-if="env.isSmall and nbSelected">
+                        <t t-call="web.ListView.Selection" />
+                    </t>
+                    <t t-else="">
+                        <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                            <t t-call="{{ props.buttonTemplate }}"/>
+                        </div>
+                    </t>
+                </t>
+                <t t-set-slot="control-panel-bottom-left">
+                    <t t-if="props.info.actionMenus and model.root.selection.length">
+                        <ActionMenus
+                            getActiveIds="() => model.root.selection.map((r) => r.resId)"
+                            context="props.context"
+                            domain="props.domain"
+                            items="getActionMenuItems()"
+                            isDomainSelected="model.root.isDomainSelected"
+                            resModel="model.root.resModel"
+                            onActionExecuted="() => model.load()"/>
+                    </t>
+                </t>
+                <t t-if="dashboardState.kpis" t-call="QLTV.DashboardCards"/>
+                <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" allowSelectors="props.allowSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord" onOptionalFieldsChanged.bind="onOptionalFieldsChanged"/>
+            </Layout>
+        </div>
+    </t>
+
+</templates>
