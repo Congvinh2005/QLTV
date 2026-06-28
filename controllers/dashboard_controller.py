@@ -34,6 +34,7 @@ class LibraryDashboardController(http.Controller):
         return {
             "total_books": Book.search_count([]),
             "total_copies": sum(Book.search([]).mapped("quantity_total")),
+            "available": sum(Book.search([]).mapped("available_count")),
             "total_readers": Reader.search_count([]),
             "total_loans": Loan.search_count([]),
             "borrowed": Loan.search_count([("state", "=", "borrowed")]),

@@ -2,48 +2,111 @@
 <templates xml:space="preserve">
     <t t-name="QLTV.LibraryDashboard" owl="1">
         <div class="o_library_dashboard">
-            <div class="o_library_dashboard__grid">
-                <div class="o_library_dashboard__kpi">
-                    <span>Tổng sách</span>
-                    <strong t-esc="state.kpis.total_books || 0"/>
+            <div class="dashboard_row">
+                <div class="dashboard_card blue">
+                    <div class="icon">
+                        <i class="fa fa-book"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.total_books || 0"/>
+                        <div class="title">Tổng sách</div>
+                    </div>
                 </div>
-                <div class="o_library_dashboard__kpi">
-                    <span>Tổng bản</span>
-                    <strong t-esc="state.kpis.total_copies || 0"/>
+                <div class="dashboard_card green">
+                    <div class="icon">
+                        <i class="fa fa-users"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.total_readers || 0"/>
+                        <div class="title">Độc giả</div>
+                    </div>
                 </div>
-                <div class="o_library_dashboard__kpi">
-                    <span>Độc giả</span>
-                    <strong t-esc="state.kpis.total_readers || 0"/>
+                <div class="dashboard_card yellow">
+                    <div class="icon">
+                        <i class="fa fa-exchange"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.borrowed || 0"/>
+                        <div class="title">Đang mượn</div>
+                    </div>
                 </div>
-                <div class="o_library_dashboard__kpi">
-                    <span>Phiếu mượn</span>
-                    <strong t-esc="state.kpis.total_loans || 0"/>
+                <div class="dashboard_card red">
+                    <div class="icon">
+                        <i class="fa fa-warning"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.overdue || 0"/>
+                        <div class="title">Quá hạn</div>
+                    </div>
                 </div>
-                <div class="o_library_dashboard__kpi">
-                    <span>Đang mượn</span>
-                    <strong t-esc="state.kpis.borrowed || 0"/>
-                </div>
-                <div class="o_library_dashboard__kpi">
-                    <span>Quá hạn</span>
-                    <strong t-esc="state.kpis.overdue || 0"/>
-                </div>
-                <div class="o_library_dashboard__kpi">
-                    <span>Đã trả</span>
-                    <strong t-esc="state.kpis.returned || 0"/>
+                <div class="dashboard_card purple">
+                    <div class="icon">
+                        <i class="fa fa-check"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.available || 0"/>
+                        <div class="title">Có sẵn</div>
+                    </div>
                 </div>
             </div>
-            <div class="o_library_dashboard__grid o_library_dashboard__revenue">
-                <div class="o_library_dashboard__kpi o_dashboard_kpi__revenue">
-                    <span>Tổng doanh thu</span>
-                    <strong t-esc="state.kpis.total_revenue || 0"/>
+
+            <div class="dashboard_row" style="margin-top: 15px;">
+                <div class="dashboard_card teal">
+                    <div class="icon">
+                        <i class="fa fa-copy"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.total_copies || 0"/>
+                        <div class="title">Tổng bản</div>
+                    </div>
                 </div>
-                <div class="o_library_dashboard__kpi o_dashboard_kpi__revenue">
-                    <span>Doanh thu hôm nay</span>
-                    <strong t-esc="state.kpis.revenue_today || 0"/>
+                <div class="dashboard_card orange">
+                    <div class="icon">
+                        <i class="fa fa-ticket"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.total_loans || 0"/>
+                        <div class="title">Phiếu mượn</div>
+                    </div>
                 </div>
-                <div class="o_library_dashboard__kpi o_dashboard_kpi__revenue">
-                    <span>Doanh thu tháng này</span>
-                    <strong t-esc="state.kpis.revenue_month || 0"/>
+                <div class="dashboard_card gray">
+                    <div class="icon">
+                        <i class="fa fa-undo"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.returned || 0"/>
+                        <div class="title">Đã trả</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard_row" style="margin-top: 15px;">
+                <div class="dashboard_card teal">
+                    <div class="icon">
+                        <i class="fa fa-dollar"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.total_revenue || 0"/>
+                        <div class="title">Tổng doanh thu</div>
+                    </div>
+                </div>
+                <div class="dashboard_card orange">
+                    <div class="icon">
+                        <i class="fa fa-calendar"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.revenue_today || 0"/>
+                        <div class="title">Doanh thu hôm nay</div>
+                    </div>
+                </div>
+                <div class="dashboard_card gray">
+                    <div class="icon">
+                        <i class="fa fa-calendar-check-o"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.revenue_month || 0"/>
+                        <div class="title">Doanh thu tháng này</div>
+                    </div>
                 </div>
             </div>
         </div>
