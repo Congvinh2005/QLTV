@@ -15,4 +15,22 @@
             t-att-readonly="props.readonly ? true : undefined"
         />
     </t>
+
+    <t t-name="QLTV.PasswordToggleField" owl="1">
+        <div class="o_field_password_toggle input-group">
+            <input type="text"
+                t-att-type="type"
+                t-att-value="currentValue"
+                t-on-input="onInput"
+                class="o_input form-control"
+                t-att-readonly="props.readonly ? true : undefined"
+                t-att-placeholder="props.placeholder"
+            />
+            <span class="o_input-group-append input-group-append" t-if="!props.readonly">
+                <button class="btn btn-outline-secondary border" type="button" t-on-click="togglePassword" tabindex="-1">
+                    <i t-att-class="iconClass" />
+                </button>
+            </span>
+        </div>
+    </t>
 </templates>

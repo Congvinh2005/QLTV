@@ -142,23 +142,27 @@ class LibraryLoan(models.Model):
             return
         picking = self.env["stock.picking"].create({
             "location_id": location_src.id,
-            "location_dst_id": location_dst.id,
+            "location_dest_id": location_dst.id,
             "picking_type_id": self.env.ref("stock.picking_type_internal").id,
             "loan_id": self.id,
-            "move_ids": [(0, 0, {
+        })
+        for line in self.line_ids:
+            if not line.book_id.product_id:
+                continue
+            self.env["stock.move"].create({
+                "picking_id": picking.id,
                 "name": self.name,
                 "product_id": line.book_id.product_id.id,
                 "product_uom_qty": 1,
                 "product_uom": line.book_id.product_id.uom_id.id,
                 "location_id": location_src.id,
-                "location_dst_id": location_dst.id,
-            }) for line in self.line_ids if line.book_id.product_id],
-        })
+                "location_dest_id": location_dst.id,
+            })
         picking.action_confirm()
         picking.action_assign()
         if picking.state == "assigned":
-            picking.move_ids.quantity = 1
-            picking.move_ids.picked = True
+            for move in picking.move_ids:
+                move.quantity_done = 1
             picking.button_validate()
         return picking
 
@@ -168,7 +172,7 @@ class LibraryLoan(models.Model):
                 raise UserError(_("Vui lòng thêm ít nhất một quyển sách."))
             if not loan.borrow_fee or loan.borrow_fee <= 0:
                 raise UserError(_("Vui lòng nhập phí mượn."))
-            unavailable = loan.line_ids.filtered(lambda line: line.book_id.available_count <= 0)
+            unavailable = loan.line_ids.filtered(lambda line: line.book_id.qty_available <= 0)
             if unavailable:
                 raise UserError(_("Một số sách đã hết."))
             loan.state = "borrowed"

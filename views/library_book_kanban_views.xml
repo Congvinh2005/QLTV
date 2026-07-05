@@ -8,7 +8,7 @@
                 <field name="code" />
                 <field name="name" />
                 <field name="author" />
-                <field name="available_count" />
+                <field name="qty_available" />
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_library_book_card">
@@ -18,7 +18,7 @@
                             <div><small><field name="code"/></small></div>
                             <div><field name="author"/></div>
                             <div>
-                                <span class="badge badge-pill badge-secondary">Còn: <field name="available_count"/></span>
+                                <span class="badge badge-pill badge-secondary">Còn: <field name="qty_available"/></span>
                             </div>
                         </div>
                     </t>

@@ -11,7 +11,7 @@
                 <field name="name" />
                 <field name="author" />
                 <field name="category" />
-                <field name="available_count" />
+                <field name="qty_available" />
             </tree>
         </field>
     </record>
@@ -31,7 +31,7 @@
                             <field name="category" />
                         </group>
                         <group>
-                            <field name="available_count" />
+                            <field name="qty_available" />
                         </group>
                     </group>
                 </sheet>
@@ -47,7 +47,7 @@
                 <field name="name" />
                 <field name="author" />
                 <field name="category" />
-                <filter name="in_stock" string="Còn sách" domain="[('available_count', '>', 0)]" />
+                <filter name="in_stock" string="Còn sách" domain="[('qty_available', '>', 0)]" />
             </search>
         </field>
     </record>

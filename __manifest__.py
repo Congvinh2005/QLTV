@@ -41,6 +41,7 @@
             "QLTV/static/src/xml/graph_templates.xml",
             "QLTV/static/src/js/vn_money_widget.js",
             "QLTV/static/src/js/vn_datetime_widget.js",
+            "QLTV/static/src/js/password_toggle_widget.js",
             "QLTV/static/src/xml/widget_templates.xml",
         ],
     },

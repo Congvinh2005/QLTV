@@ -35,6 +35,17 @@
                             <field name="address" />
                         </group>
                     </group>
+                    <group string="Tài khoản đăng nhập">
+                        <group>
+                            <field name="username" placeholder="Nhập tài khoản"/>
+                        </group>
+                        <group>
+                            <field name="password" widget="password_toggle" placeholder="Nhập mật khẩu"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="user_id" readonly="1" attrs="{'invisible': [('user_id', '=', False)]}"/>
+                    </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" />

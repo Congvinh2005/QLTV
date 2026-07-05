@@ -10,7 +10,7 @@
                 <field name="author" />
                 <field name="publisher" />
                 <filter name="out_of_stock" string="Hết sách"
-                    domain="[(\'available_count\', '=', 0)]" />
+                    domain="[(\'qty_available\', '=', 0)]" />
                 <group expand="0" string="Nhóm theo">
                     <filter name="group_category" string="Thể loại"
                         context="{'group_by': 'category'}" />

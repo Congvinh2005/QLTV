@@ -22,7 +22,7 @@
         <field name="category">Công nghệ</field>
         <field name="publisher">NXB Khoa học</field>
         <field name="publication_year">2022</field>
-        <field name="quantity_total">5</field>
+
         <field name="shelf_location">Kệ A-01</field>
     </record>
 
@@ -33,7 +33,7 @@
         <field name="category">Công nghệ</field>
         <field name="publisher">NXB Đại học</field>
         <field name="publication_year">2023</field>
-        <field name="quantity_total">3</field>
+
         <field name="shelf_location">Kệ A-02</field>
     </record>
 
@@ -44,7 +44,7 @@
         <field name="category">Văn học</field>
         <field name="publisher">NXB Văn học</field>
         <field name="publication_year">2021</field>
-        <field name="quantity_total">10</field>
+
         <field name="shelf_location">Kệ B-01</field>
     </record>
 

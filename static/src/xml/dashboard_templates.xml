@@ -109,6 +109,75 @@
                     </div>
                 </div>
             </div>
+
+            <div class="dashboard_row" style="margin-top: 15px;">
+                <div class="dashboard_card purple">
+                    <div class="icon">
+                        <i class="fa fa-cubes"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.total_stock_qty || 0"/>
+                        <div class="title">Tồn kho thực tế</div>
+                    </div>
+                </div>
+                <div class="dashboard_card red" t-att-class="state.kpis.low_stock_count > 0 ? 'dashboard_card red' : 'dashboard_card green'">
+                    <div class="icon">
+                        <i class="fa fa-exclamation-triangle"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.low_stock_count || 0"/>
+                        <div class="title">Sắp hết</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard_row" style="margin-top: 15px;">
+                <div class="dashboard_card teal">
+                    <div class="icon">
+                        <i class="fa fa-file-text-o"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.invoice_total || 0"/>
+                        <div class="title">Tổng hoá đơn</div>
+                    </div>
+                </div>
+                <div class="dashboard_card green">
+                    <div class="icon">
+                        <i class="fa fa-check-circle-o"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.invoice_paid || 0"/>
+                        <div class="title">Đã thanh toán</div>
+                    </div>
+                </div>
+                <div class="dashboard_card orange">
+                    <div class="icon">
+                        <i class="fa fa-clock-o"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.invoice_unpaid || 0"/>
+                        <div class="title">Chưa thanh toán</div>
+                    </div>
+                </div>
+                <div class="dashboard_card purple">
+                    <div class="icon">
+                        <i class="fa fa-calendar"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.invoice_today || 0"/>
+                        <div class="title">Hoá đơn hôm nay</div>
+                    </div>
+                </div>
+                <div class="dashboard_card gray">
+                    <div class="icon">
+                        <i class="fa fa-calendar-check-o"/>
+                    </div>
+                    <div class="content">
+                        <div class="number" t-esc="state.kpis.invoice_month || 0"/>
+                        <div class="title">Hoá đơn tháng này</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
 </templates>

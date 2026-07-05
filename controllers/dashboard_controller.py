@@ -14,9 +14,9 @@ class LibraryDashboardController(http.Controller):
         if model == "library.book":
             return {
                 "total": Book.search_count([]),
-                "available": sum(Book.search([]).mapped("available_count")),
+                "available": sum(Book.search([]).mapped("qty_available")),
                 "borrowed": sum(Book.search([]).mapped("borrowed_count")),
-                "out_of_stock": Book.search_count([("available_count", "=", 0)]),
+                "out_of_stock": Book.search_count([("qty_available", "=", 0)]),
             }
         if model == "library.reader":
             return {
@@ -49,6 +49,7 @@ class LibraryDashboardController(http.Controller):
         Book = request.env["library.book"].sudo()
         Reader = request.env["library.reader"].sudo()
         Loan = request.env["library.loan"].sudo()
+        Invoice = request.env["account.move"].sudo()
 
         def revenue_domain(start=None, end=None):
             domain = [("state", "in", ("returned", "overdue"))]
@@ -68,10 +69,27 @@ class LibraryDashboardController(http.Controller):
             Loan.search(revenue_domain(None, None)).mapped("total_amount")
         ) or 0
 
+        books = Book.search([])
+        products = books.mapped("product_id").filtered(lambda p: p)
+        total_stock_qty = sum(products.mapped("qty_available")) or 0
+        low_stock_count = len(books.filtered(lambda b: b.product_id and b.product_id.qty_available <= 2))
+
+        inv_domain = [("loan_id", "!=", False), ("move_type", "=", "out_invoice")]
+        invoices = Invoice.search(inv_domain)
+        invoice_total = sum(invoices.mapped("amount_total")) or 0
+        invoice_paid = sum(invoices.filtered(lambda i: i.payment_state == "paid").mapped("amount_total")) or 0
+        invoice_unpaid = sum(invoices.filtered(lambda i: i.payment_state != "paid").mapped("amount_total")) or 0
+
+        inv_domain_today = inv_domain + [("invoice_date", "=", fields.Date.today())]
+        invoice_today = sum(Invoice.search(inv_domain_today).mapped("amount_total")) or 0
+
+        inv_domain_month = inv_domain + [("invoice_date", ">=", fields.Date.today().replace(day=1))]
+        invoice_month = sum(Invoice.search(inv_domain_month).mapped("amount_total")) or 0
+
         return {
             "total_books": Book.search_count([]),
-            "total_copies": sum(Book.search([]).mapped("quantity_total")),
-            "available": sum(Book.search([]).mapped("available_count")),
+            "total_copies": sum(books.mapped("qty_available")) + sum(books.mapped("borrowed_count")),
+            "available": sum(books.mapped("qty_available")),
             "total_readers": Reader.search_count([]),
             "total_loans": Loan.search_count([]),
             "borrowed": Loan.search_count([("state", "=", "borrowed")]),
@@ -80,6 +98,13 @@ class LibraryDashboardController(http.Controller):
             "total_revenue": total_revenue,
             "revenue_today": revenue_today,
             "revenue_month": revenue_month,
+            "total_stock_qty": total_stock_qty,
+            "low_stock_count": low_stock_count,
+            "invoice_total": invoice_total,
+            "invoice_paid": invoice_paid,
+            "invoice_unpaid": invoice_unpaid,
+            "invoice_today": invoice_today,
+            "invoice_month": invoice_month,
         }
 
 

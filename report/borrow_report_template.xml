@@ -22,6 +22,10 @@
                             <strong>Ngày hết hạn:</strong>
                             <span t-field="doc.due_date" />
                         </p>
+                        <p>
+                            <strong>Ngày trả:</strong>
+                            <span t-field="doc.return_date" />
+                        </p>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
@@ -44,6 +48,50 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <h3>Chi phí</h3>
+                        <p>
+                            <strong>Phí mượn:</strong>
+                            <span t-field="doc.borrow_fee" />
+                        </p>
+                        <p>
+                            <strong>Phí phạt:</strong>
+                            <span t-field="doc.fine_amount" />
+                        </p>
+                        <p>
+                            <strong>Tổng tiền:</strong>
+                            <span t-field="doc.total_amount" />
+                        </p>
+
+                        <h3>Kho</h3>
+                        <p>
+                            <strong>Phiếu kho:</strong>
+                        </p>
+                        <table class="table table-sm" t-if="doc.picking_ids">
+                            <thead>
+                                <tr>
+                                    <th>Mã phiếu kho</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.picking_ids" t-as="p">
+                                    <td>
+                                        <span t-field="p.name" />
+                                    </td>
+                                    <td>
+                                        <span t-field="p.state" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p t-if="doc.invoice_ids">
+                            <strong>Hoá đơn:</strong>
+                            <span t-foreach="doc.invoice_ids" t-as="inv" t-separator=", ">
+                                <span t-field="inv.name" />
+                            </span>
+                        </p>
                     </div>
                 </t>
             </t>

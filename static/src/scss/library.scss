@@ -31,3 +31,12 @@
 .o_library_kanban .dashboard_card.returned {
     background: #F5F5F5;
 }
+
+.o_field_password_toggle .o_input-group-append .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.o_field_password_toggle .o_input-group-append .btn i {
+    font-size: 14px;
+}
