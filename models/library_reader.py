@@ -18,6 +18,21 @@ class LibraryReader(models.Model):
         default=fields.Date.context_today,
     )
     loan_ids = fields.One2many("library.loan", "reader_id", string="Phiếu mượn")
+    partner_id = fields.Many2one("res.partner", string="Khách hàng", readonly=True, copy=False)
+
+    def _get_or_create_partner(self):
+        self.ensure_one()
+        if self.partner_id:
+            return self.partner_id
+        partner = self.env["res.partner"].create({
+            "name": self.name,
+            "email": self.email or "",
+            "phone": self.phone or "",
+            "street": self.address or "",
+            "company_type": "person",
+        })
+        self.partner_id = partner
+        return partner
     total_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Tổng số phiếu mượn")
     current_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Đang mượn")
     overdue_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Quá hạn")

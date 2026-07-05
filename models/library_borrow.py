@@ -62,6 +62,7 @@ class LibraryLoan(models.Model):
     )
     line_ids = fields.One2many("library.loan.line", "loan_id", string="Sách", copy=True)
     picking_ids = fields.One2many("stock.picking", "loan_id", string="Phiếu kho")
+    invoice_ids = fields.One2many("account.move", "loan_id", string="Hoá đơn")
 
     @api.depends("borrow_date", "return_date")
     def _compute_borrow_days(self):
@@ -193,6 +194,55 @@ class LibraryLoan(models.Model):
                 "fine_amount": fine,
             })
             loan._create_stock_picking("return")
+            loan._create_invoice()
+
+    def _get_invoice_product(self):
+        return self.env.ref("QLTV.product_library_fee", raise_if_not_found=False)
+
+    def _get_sale_journal(self):
+        journal = self.env["account.journal"].search([("type", "=", "sale")], limit=1)
+        if not journal:
+            journal = self.env["account.journal"].search([("type", "=", "general")], limit=1)
+        return journal
+
+    def _create_invoice(self):
+        self.ensure_one()
+        total = (self.borrow_fee or 0) + (self.fine_amount or 0)
+        if total <= 0:
+            return
+        partner = self.reader_id._get_or_create_partner()
+        product = self._get_invoice_product()
+        journal = self._get_sale_journal()
+        if not product or not journal:
+            return
+        invoice_lines = []
+        if self.borrow_fee:
+            invoice_lines.append((0, 0, {
+                "product_id": product.id,
+                "name": "Phí mượn sách - %s" % self.name,
+                "quantity": 1,
+                "price_unit": self.borrow_fee,
+                "tax_ids": False,
+            }))
+        if self.fine_amount:
+            invoice_lines.append((0, 0, {
+                "product_id": product.id,
+                "name": "Phí phạt quá hạn - %s" % self.name,
+                "quantity": 1,
+                "price_unit": self.fine_amount,
+                "tax_ids": False,
+            }))
+        invoice = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": partner.id,
+            "journal_id": journal.id,
+            "loan_id": self.id,
+            "currency_id": self.currency_id.id,
+            "invoice_date": fields.Date.today(),
+            "invoice_line_ids": invoice_lines,
+        })
+        invoice.action_post()
+        return invoice
 
     def action_check_overdue(self):
         today = fields.Datetime.now()

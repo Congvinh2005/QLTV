@@ -12,6 +12,7 @@
         "security/ir.model.access.csv",
         "security/library_record_rules.xml",
         "data/cron_data.xml",
+        "data/account_data.xml",
         "views/library_book_views.xml",
         "views/library_reader_views.xml",
         "views/library_borrow_views.xml",
