@@ -12,6 +12,12 @@
         <field name="value">1000</field>
     </record>
 
+    <record id="stock_location_borrowed" model="stock.location">
+        <field name="name">Sách đang mượn</field>
+        <field name="usage">internal</field>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+    </record>
+
     <record id="ir_cron_library_overdue" model="ir.cron">
         <field name="name">Thư viện: Kiểm tra phiếu mượn quá hạn</field>
         <field name="model_id" ref="model_library_loan" />

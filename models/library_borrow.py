@@ -61,6 +61,7 @@ class LibraryLoan(models.Model):
         tracking=True,
     )
     line_ids = fields.One2many("library.loan.line", "loan_id", string="Sách", copy=True)
+    picking_ids = fields.One2many("stock.picking", "loan_id", string="Phiếu kho")
 
     @api.depends("borrow_date", "return_date")
     def _compute_borrow_days(self):
@@ -119,6 +120,47 @@ class LibraryLoan(models.Model):
     def action_approve(self):
         self.write({"state": "approved"})
 
+    def _get_borrowed_location(self):
+        return self.env.ref("QLTV.stock_location_borrowed")
+
+    def _get_stock_location(self):
+        return self.env.ref("stock.stock_location_stock")
+
+    def _create_stock_picking(self, move_type):
+        self.ensure_one()
+        if not self.line_ids:
+            return
+        location_src = location_dst = False
+        if move_type == "borrow":
+            location_src = self._get_stock_location()
+            location_dst = self._get_borrowed_location()
+        elif move_type == "return":
+            location_src = self._get_borrowed_location()
+            location_dst = self._get_stock_location()
+        else:
+            return
+        picking = self.env["stock.picking"].create({
+            "location_id": location_src.id,
+            "location_dst_id": location_dst.id,
+            "picking_type_id": self.env.ref("stock.picking_type_internal").id,
+            "loan_id": self.id,
+            "move_ids": [(0, 0, {
+                "name": self.name,
+                "product_id": line.book_id.product_id.id,
+                "product_uom_qty": 1,
+                "product_uom": line.book_id.product_id.uom_id.id,
+                "location_id": location_src.id,
+                "location_dst_id": location_dst.id,
+            }) for line in self.line_ids if line.book_id.product_id],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        if picking.state == "assigned":
+            picking.move_ids.quantity = 1
+            picking.move_ids.picked = True
+            picking.button_validate()
+        return picking
+
     def action_borrow(self):
         for loan in self:
             if not loan.line_ids:
@@ -129,6 +171,7 @@ class LibraryLoan(models.Model):
             if unavailable:
                 raise UserError(_("Một số sách đã hết."))
             loan.state = "borrowed"
+            loan._create_stock_picking("borrow")
 
     def _get_overdue_fee_per_day(self):
         return int(self.env["ir.config_parameter"].sudo().get_param("qltv.overdue_fee_per_day", "1000"))
@@ -149,6 +192,7 @@ class LibraryLoan(models.Model):
                 "return_date": today,
                 "fine_amount": fine,
             })
+            loan._create_stock_picking("return")
 
     def action_check_overdue(self):
         today = fields.Datetime.now()
