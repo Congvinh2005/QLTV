@@ -173,6 +173,8 @@ class LibraryLoan(models.Model):
             if not loan.borrow_fee or loan.borrow_fee <= 0:
                 raise UserError(_("Vui lòng nhập phí mượn."))
             for line in loan.line_ids:
+                if line.quantity <= 0:
+                    raise UserError(_("Số lượng mượn của sách '%s' phải lớn hơn 0.") % line.book_id.name)
                 if line.book_id.qty_available < line.quantity:
                     if line.book_id.qty_available <= 0:
                         raise UserError(_("Sách '%s' đã hết, vui lòng bỏ chọn hoặc chọn sách khác.") % line.book_id.name)

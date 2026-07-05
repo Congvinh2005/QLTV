@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class LibraryLoanLine(models.Model):
@@ -14,3 +14,8 @@ class LibraryLoanLine(models.Model):
         readonly=True,
     )
     state = fields.Selection(related="loan_id.state", store=True, readonly=True)
+
+    @api.onchange("book_id")
+    def _onchange_book_id(self):
+        if self.book_id and not self.quantity:
+            self.quantity = 1
