@@ -13,6 +13,7 @@
                 <field name="quantity_total" sum="Tổng số bản" />
                 <field name="borrowed_count" sum="Đang mượn" />
                 <field name="available_count" sum="Có sẵn" />
+                <field name="qty_available" sum="Tồn kho" />
                 <field name="total_borrow_count" sum="Tổng lượt mượn" />
             </tree>
         </field>
@@ -36,9 +37,19 @@
                         <group>
                             <field name="publication_year" />
                             <field name="isbn" />
+                            <field name="price" />
                             <field name="shelf_location" />
                             <field name="quantity_total" />
                             <field name="available_count" readonly="1" />
+                        </group>
+                    </group>
+                    <group string="Tồn kho">
+                        <group>
+                            <field name="qty_available" />
+                            <field name="product_categ_id" />
+                        </group>
+                        <group>
+                            <field name="product_id" readonly="1" />
                         </group>
                     </group>
                 </sheet>
