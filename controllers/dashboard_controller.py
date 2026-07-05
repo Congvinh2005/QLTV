@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from odoo import fields, http
 from odoo.http import request
 
@@ -30,6 +32,7 @@ class LibraryDashboardController(http.Controller):
                 "overdue": Loan.search_count([("state", "=", "overdue")]),
             }
         return {}
+
     @http.route("/my", type="http", auth="user", website=True)
     def my_home(self):
         if request.env.user.has_group("QLTV.group_library_user"):
@@ -38,25 +41,32 @@ class LibraryDashboardController(http.Controller):
 
     @http.route("/library/dashboard/data", type="json", auth="user")
     def dashboard_data(self):
-        today = fields.Date.today()
+        now = fields.Datetime.now()
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        today_end = today_start + timedelta(days=1)
+        month_start = today_start.replace(day=1)
+
         Book = request.env["library.book"].sudo()
         Reader = request.env["library.reader"].sudo()
         Loan = request.env["library.loan"].sudo()
 
-        # Doanh thu
-        all_loans = Loan.search([("state", "in", ("returned", "overdue"))])
-        total_revenue = sum(all_loans.mapped("total_amount"))
-        today_loans = Loan.search([
-            ("state", "in", ("returned", "overdue")),
-            ("return_date", "=", today),
-        ])
-        revenue_today = sum(today_loans.mapped("total_amount"))
-        month_start = today.replace(day=1)
-        month_loans = Loan.search([
-            ("state", "in", ("returned", "overdue")),
-            ("return_date", ">=", month_start),
-        ])
-        revenue_month = sum(month_loans.mapped("total_amount"))
+        def revenue_domain(start=None, end=None):
+            domain = [("state", "in", ("returned", "overdue"))]
+            if start:
+                domain.append(("return_date", ">=", start))
+            if end:
+                domain.append(("return_date", "<", end))
+            return domain
+
+        revenue_today = sum(
+            Loan.search(revenue_domain(today_start, today_end)).mapped("total_amount")
+        ) or 0
+        revenue_month = sum(
+            Loan.search(revenue_domain(month_start, None)).mapped("total_amount")
+        ) or 0
+        total_revenue = sum(
+            Loan.search(revenue_domain(None, None)).mapped("total_amount")
+        ) or 0
 
         return {
             "total_books": Book.search_count([]),
