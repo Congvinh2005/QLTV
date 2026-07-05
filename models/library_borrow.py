@@ -153,7 +153,7 @@ class LibraryLoan(models.Model):
                 "picking_id": picking.id,
                 "name": self.name,
                 "product_id": line.book_id.product_id.id,
-                "product_uom_qty": 1,
+                "product_uom_qty": line.quantity,
                 "product_uom": line.book_id.product_id.uom_id.id,
                 "location_id": location_src.id,
                 "location_dest_id": location_dst.id,
@@ -162,7 +162,7 @@ class LibraryLoan(models.Model):
         picking.action_assign()
         if picking.state == "assigned":
             for move in picking.move_ids:
-                move.quantity_done = 1
+                move.quantity_done = move.product_uom_qty
             picking.button_validate()
         return picking
 
@@ -172,9 +172,10 @@ class LibraryLoan(models.Model):
                 raise UserError(_("Vui lòng thêm ít nhất một quyển sách."))
             if not loan.borrow_fee or loan.borrow_fee <= 0:
                 raise UserError(_("Vui lòng nhập phí mượn."))
-            unavailable = loan.line_ids.filtered(lambda line: line.book_id.qty_available <= 0)
-            if unavailable:
-                raise UserError(_("Một số sách đã hết."))
+            for line in loan.line_ids:
+                if line.book_id.qty_available < line.quantity:
+                    raise UserError(_("Sách '%s' chỉ còn %d, không đủ %d.") % (
+                        line.book_id.name, line.book_id.qty_available, line.quantity))
             loan.state = "borrowed"
             loan._create_stock_picking("borrow")
 
