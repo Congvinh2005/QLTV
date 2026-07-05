@@ -6,7 +6,7 @@
     "author": "QLTV",
     "website": "",
     "license": "LGPL-3",
-    "depends": ["base", "web", "mail"],
+    "depends": ["base", "web", "mail", "stock", "account"],
     "data": [
         "security/library_security.xml",
         "security/ir.model.access.csv",

@@ -15,3 +15,17 @@ access_library_book_manager,library.book.manager,model_library_book,group_librar
 access_library_reader_manager,library.reader.manager,model_library_reader,group_library_manager,1,1,1,1
 access_library_loan_manager,library.loan.manager,model_library_loan,group_library_manager,1,1,1,1
 access_library_loan_line_manager,library.loan.line.manager,model_library_loan_line,group_library_manager,1,1,1,1
+access_library_stock_picking,library.stock.picking,stock.model_stock_picking,group_library_user,1,1,1,0
+access_library_stock_move,library.stock.move,stock.model_stock_move,group_library_user,1,1,1,0
+access_library_stock_location,library.stock.location,stock.model_stock_location,group_library_user,1,0,0,0
+access_library_product_product,library.product.product,product.model_product_product,group_library_user,1,1,1,0
+access_library_account_move,library.account.move,account.model_account_move,group_library_user,1,1,1,0
+access_library_account_journal,library.account.journal,account.model_account_journal,group_library_user,1,0,0,0
+access_library_account_account,library.account.account,account.model_account_account,group_library_user,1,0,0,0
+access_library_stock_picking_mgr,library.stock.picking.mgr,stock.model_stock_picking,group_library_manager,1,1,1,1
+access_library_stock_move_mgr,library.stock.move.mgr,stock.model_stock_move,group_library_manager,1,1,1,1
+access_library_stock_location_mgr,library.stock.location.mgr,stock.model_stock_location,group_library_manager,1,1,1,1
+access_library_product_product_mgr,library.product.product.mgr,product.model_product_product,group_library_manager,1,1,1,1
+access_library_account_move_mgr,library.account.move.mgr,account.model_account_move,group_library_manager,1,1,1,1
+access_library_account_journal_mgr,library.account.journal.mgr,account.model_account_journal,group_library_manager,1,1,0,0
+access_library_account_account_mgr,library.account.account.mgr,account.model_account_account,group_library_manager,1,1,0,0
