@@ -27,6 +27,7 @@ class LibraryBook(models.Model):
     qty_available = fields.Float(
         string="Tồn kho thực tế",
         compute="_compute_qty_available",
+        search="_search_qty_available",
         readonly=True,
     )
     product_categ_id = fields.Many2one("product.category", string="Danh mục sản phẩm")
@@ -49,6 +50,34 @@ class LibraryBook(models.Model):
                 ("location_id", "=", StockLocation.id),
             ], limit=1)
             book.qty_available = quant.quantity if quant else 0
+
+    def _search_qty_available(self, operator, value):
+        StockLocation = self.env.ref("stock.stock_location_stock")
+        quants = self.env["stock.quant"].search([
+            ("location_id", "=", StockLocation.id),
+        ])
+        matching_products = set()
+        for quant in quants:
+            qty = quant.quantity
+            if operator == "=" and qty == value:
+                matching_products.add(quant.product_id.id)
+            elif operator == "!=" and qty != value:
+                matching_products.add(quant.product_id.id)
+            elif operator == ">" and qty > value:
+                matching_products.add(quant.product_id.id)
+            elif operator == ">=" and qty >= value:
+                matching_products.add(quant.product_id.id)
+            elif operator == "<" and qty < value:
+                matching_products.add(quant.product_id.id)
+            elif operator == "<=" and qty <= value:
+                matching_products.add(quant.product_id.id)
+            elif operator == "in" and qty in value:
+                matching_products.add(quant.product_id.id)
+            elif operator == "not in" and qty not in value:
+                matching_products.add(quant.product_id.id)
+        if not matching_products:
+            return [("id", "=", False)]
+        return [("product_id", "in", list(matching_products))]
 
     @api.depends("loan_line_ids.state")
     def _compute_borrowed_count(self):
