@@ -174,8 +174,13 @@ class LibraryLoan(models.Model):
                 raise UserError(_("Vui lòng nhập phí mượn."))
             for line in loan.line_ids:
                 if line.book_id.qty_available < line.quantity:
-                    raise UserError(_("Sách '%s' chỉ còn %d, không đủ %d.") % (
-                        line.book_id.name, line.book_id.qty_available, line.quantity))
+                    if line.book_id.qty_available <= 0:
+                        raise UserError(_("Sách '%s' đã hết, vui lòng bỏ chọn hoặc chọn sách khác.") % line.book_id.name)
+                    raise UserError(_("Sách '%s' chỉ còn %s, không đủ %s.") % (
+                        line.book_id.name,
+                        f"{line.book_id.qty_available:.0f}",
+                        f"{line.quantity:.0f}",
+                    ))
             loan.state = "borrowed"
             loan._create_stock_picking("borrow")
 
