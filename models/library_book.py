@@ -26,7 +26,7 @@ class LibraryBook(models.Model):
     product_id = fields.Many2one("product.product", string="Sản phẩm", readonly=True, copy=False)
     qty_available = fields.Float(
         string="Tồn kho thực tế",
-        related="product_id.qty_available",
+        compute="_compute_qty_available",
         readonly=True,
     )
     product_categ_id = fields.Many2one("product.category", string="Danh mục sản phẩm")
@@ -36,6 +36,19 @@ class LibraryBook(models.Model):
         ("code_unique", "unique(code)", "Mã sách phải là duy nhất."),
         ("isbn_unique", "unique(isbn)", "ISBN phải là duy nhất."),
     ]
+
+    @api.depends("product_id")
+    def _compute_qty_available(self):
+        StockLocation = self.env.ref("stock.stock_location_stock")
+        for book in self:
+            if not book.product_id:
+                book.qty_available = 0
+                continue
+            quant = self.env["stock.quant"].search([
+                ("product_id", "=", book.product_id.id),
+                ("location_id", "=", StockLocation.id),
+            ], limit=1)
+            book.qty_available = quant.quantity if quant else 0
 
     @api.depends("loan_line_ids.state")
     def _compute_borrowed_count(self):
