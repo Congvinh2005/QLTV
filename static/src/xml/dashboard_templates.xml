@@ -11,10 +11,9 @@
                     </div>
                     <div class="sidebar_section">
                         <div class="sidebar_label">QUẢN LÝ</div>
-                        <a class="sidebar_item"><i class="fa fa-book"/> Sách</a>
-                        <a class="sidebar_item"><i class="fa fa-user"/> Độc giả</a>
-                        <a class="sidebar_item"><i class="fa fa-id-card"/> Phiếu mượn</a>
-                        <a class="sidebar_item"><i class="fa fa-exchange"/> Mượn trả</a>
+                        <a class="sidebar_item" t-on-click="openBook"><i class="fa fa-book"/> Quản lý Sách</a>
+                        <a class="sidebar_item" t-on-click="openReader"><i class="fa fa-user"/> Quản lý Độc giả</a>
+                        <a class="sidebar_item" t-on-click="openLoan"><i class="fa fa-id-card"/> Quản lý Mượn trả</a>
                     </div>
                     <div class="sidebar_section">
                         <div class="sidebar_label">BÁO CÁO</div>
@@ -95,7 +94,7 @@
                         <div class="dashboard_card medium blue">
                             <div class="card_icon"><i class="fa fa-dollar"/></div>
                             <div class="card_info">
-                                <div class="number"><t t-esc="state.kpis.total_revenue || 0"/></div>
+                                <div class="number"><t t-esc="formatNumber(state.kpis.total_revenue) + ' đ'"/></div>
                                 <div class="title">Tổng doanh thu</div>
                                 <div class="trend up">↑ 20% so với tháng trước</div>
                             </div>
@@ -103,14 +102,14 @@
                         <div class="dashboard_card medium orange">
                             <div class="card_icon"><i class="fa fa-calendar"/></div>
                             <div class="card_info">
-                                <div class="number"><t t-esc="state.kpis.revenue_today || 0"/></div>
+                                <div class="number"><t t-esc="formatNumber(state.kpis.revenue_today) + ' đ'"/></div>
                                 <div class="title">Doanh thu hôm nay</div>
                             </div>
                         </div>
                         <div class="dashboard_card medium blue">
                             <div class="card_icon"><i class="fa fa-calendar-check-o"/></div>
                             <div class="card_info">
-                                <div class="number"><t t-esc="state.kpis.revenue_month || 0"/></div>
+                                <div class="number"><t t-esc="formatNumber(state.kpis.revenue_month) + ' đ'"/></div>
                                 <div class="title">Doanh thu tháng này</div>
                             </div>
                         </div>
@@ -139,35 +138,35 @@
                                 <div class="invoice_item">
                                     <div class="icon_wrap"><i class="fa fa-file-text-o"/></div>
                                     <div>
-                                        <div class="number"><t t-esc="state.kpis.invoice_total || 0"/></div>
+                                        <div class="number"><t t-esc="formatNumber(state.kpis.invoice_total) + ' đ'"/></div>
                                         <div class="title">Tổng hoá đơn</div>
                                     </div>
                                 </div>
                                 <div class="invoice_item">
                                     <div class="icon_wrap"><i class="fa fa-check-circle-o"/></div>
                                     <div>
-                                        <div class="number"><t t-esc="state.kpis.invoice_paid || 0"/></div>
+                                        <div class="number"><t t-esc="formatNumber(state.kpis.invoice_paid) + ' đ'"/></div>
                                         <div class="title">Đã thanh toán</div>
                                     </div>
                                 </div>
                                 <div class="invoice_item">
                                     <div class="icon_wrap"><i class="fa fa-clock-o"/></div>
                                     <div>
-                                        <div class="number"><t t-esc="state.kpis.invoice_unpaid || 0"/></div>
+                                        <div class="number"><t t-esc="formatNumber(state.kpis.invoice_unpaid) + ' đ'"/></div>
                                         <div class="title">Chưa thanh toán</div>
                                     </div>
                                 </div>
                                 <div class="invoice_item">
                                     <div class="icon_wrap"><i class="fa fa-calendar"/></div>
                                     <div>
-                                        <div class="number"><t t-esc="state.kpis.invoice_today || 0"/></div>
+                                        <div class="number"><t t-esc="formatNumber(state.kpis.invoice_today) + ' đ'"/></div>
                                         <div class="title">Hoá đơn hôm nay</div>
                                     </div>
                                 </div>
                                 <div class="invoice_item">
                                     <div class="icon_wrap"><i class="fa fa-calendar-check-o"/></div>
                                     <div>
-                                        <div class="number"><t t-esc="state.kpis.invoice_month || 0"/></div>
+                                        <div class="number"><t t-esc="formatNumber(state.kpis.invoice_month) + ' đ'"/></div>
                                         <div class="title">Hoá đơn tháng này</div>
                                     </div>
                                 </div>

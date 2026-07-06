@@ -42,6 +42,18 @@ export class LibraryDashboard extends Component {
         this.actionService.doAction(action);
     }
 
+    openBook() {
+        this.actionService.doAction("QLTV.action_library_book");
+    }
+
+    openReader() {
+        this.actionService.doAction("QLTV.action_library_reader");
+    }
+
+    openLoan() {
+        this.actionService.doAction("QLTV.action_library_loan");
+    }
+
     renderCharts() {
         if (typeof Chart === "undefined") {
             console.warn("Chart.js không được nạp, vui lòng kiểm tra asset.");
@@ -158,7 +170,7 @@ export class LibraryDashboard extends Component {
     }
 
     formatNumber(value) {
-        return new Intl.NumberFormat("en-US").format(value || 0);
+        return new Intl.NumberFormat("vi-VN").format(value || 0);
     }
 }
 

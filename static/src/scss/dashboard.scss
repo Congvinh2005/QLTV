@@ -63,6 +63,8 @@
 
 .qltv_dashboard_page .qltv_main {
     min-height: 100vh;
+    overflow-y: auto;
+    max-height: 100vh;
 }
 
 .qltv_dashboard_page .dashboard_grid {
@@ -174,7 +176,7 @@
 }
 
 .qltv_dashboard_page .number {
-    font-size: 34px;
+    font-size: 24px;
     font-weight: 700;
 }
 
@@ -215,7 +217,7 @@
 }
 
 .qltv_dashboard_page .large_number {
-    font-size: 42px;
+    font-size: 26px;
     font-weight: 700;
 }
 
