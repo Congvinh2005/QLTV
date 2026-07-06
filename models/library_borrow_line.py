@@ -19,3 +19,12 @@ class LibraryLoanLine(models.Model):
     def _onchange_book_id(self):
         if self.book_id and not self.quantity:
             self.quantity = 1
+
+    def name_get(self):
+        result = []
+        for line in self:
+            name = line.loan_id.name or ""
+            if line.book_id:
+                name += " - %s" % line.book_id.name if name else line.book_id.name
+            result.append((line.id, name))
+        return result

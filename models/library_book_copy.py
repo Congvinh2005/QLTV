@@ -16,12 +16,18 @@ class LibraryBookCopy(models.Model):
         ("lost", "Mất"),
     ], string="Trạng thái", default="available", required=True)
     loan_line_id = fields.Many2one("library.loan.line", string="Phiếu mượn", ondelete="set null")
+    reader_name = fields.Char(string="Người mượn", compute="_compute_reader_name", store=True)
 
     display_name = fields.Char(string="Tên hiển thị", compute="_compute_display_name", store=True)
 
     _sql_constraints = [
         ("book_copy_code_unique", "unique(book_id, code)", "Mã bản sao phải là duy nhất trong cùng một sách."),
     ]
+
+    @api.depends("loan_line_id.loan_id.reader_id.name")
+    def _compute_reader_name(self):
+        for copy in self:
+            copy.reader_name = copy.loan_line_id.loan_id.reader_id.name if copy.loan_line_id and copy.loan_line_id.loan_id and copy.loan_line_id.loan_id.reader_id else ""
 
     @api.depends("book_id.name", "code")
     def _compute_display_name(self):

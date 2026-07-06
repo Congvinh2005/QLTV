@@ -76,17 +76,11 @@ class LibraryBook(models.Model):
 
     @api.model
     def _get_book_product_category(self):
-        categ = self.env.ref("QLTV.product_category_books", raise_if_not_found=False)
+        categ = self.env["product.category"].search([("name", "=", "Sách")], limit=1)
         if not categ:
             categ = self.env["product.category"].create({
                 "name": "Sách",
                 "parent_id": self.env.ref("product.product_category_all").id,
-            })
-            self.env["ir.model.data"].create({
-                "module": "QLTV",
-                "name": "product_category_books",
-                "model": "product.category",
-                "res_id": categ.id,
             })
         return categ
 

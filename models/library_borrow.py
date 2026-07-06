@@ -175,14 +175,18 @@ class LibraryLoan(models.Model):
             for line in loan.line_ids:
                 if line.quantity <= 0:
                     raise UserError(_("Số lượng mượn của sách '%s' phải lớn hơn 0.") % line.book_id.name)
-                if line.book_id.qty_available < line.quantity:
-                    if line.book_id.qty_available <= 0:
+                copies = line.book_id.copy_ids.filtered(
+                    lambda c: c.state == "available"
+                ).sorted(key=lambda c: c.code)
+                if len(copies) < line.quantity:
+                    if len(copies) <= 0:
                         raise UserError(_("Sách '%s' đã hết, vui lòng bỏ chọn hoặc chọn sách khác.") % line.book_id.name)
                     raise UserError(_("Sách '%s' chỉ còn %s, không đủ %s.") % (
                         line.book_id.name,
-                        f"{line.book_id.qty_available:.0f}",
+                        f"{len(copies):.0f}",
                         f"{line.quantity:.0f}",
                     ))
+                copies[:line.quantity].write({"loan_line_id": line.id, "state": "borrowed"})
             loan.state = "borrowed"
             loan._create_stock_picking("borrow")
 
@@ -200,6 +204,9 @@ class LibraryLoan(models.Model):
             fine = 0
             if overdue_days > 0:
                 fine = overdue_days * self._get_overdue_fee_per_day()
+            self.env["library.book.copy"].search([
+                ("loan_line_id", "in", loan.line_ids.ids)
+            ]).write({"state": "available", "loan_line_id": False})
             loan.write({
                 "state": "returned",
                 "return_date": today,

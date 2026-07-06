@@ -9,6 +9,8 @@
                 <field name="code" />
                 <field name="state" widget="badge" decoration-success="state == 'available'"
                     decoration-warning="state == 'borrowed'" decoration-danger="state in ('damaged', 'lost')" />
+                <field name="loan_line_id" optional="show" />
+                <field name="reader_name" />
             </tree>
         </field>
     </record>
