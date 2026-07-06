@@ -17,6 +17,12 @@ class LibraryBook(models.Model):
     isbn = fields.Char(string="ISBN")
     shelf_location = fields.Char(string="Vị trí kệ")
     cover_image = fields.Image(string="Bìa")
+    total_copies = fields.Integer(string="Số bản", default=1)
+    copy_ids = fields.One2many("library.book.copy", "book_id", string="Các bản sao")
+    available_copy_ids = fields.One2many(
+        "library.book.copy", "book_id", string="Bản có sẵn",
+        domain=[("state", "=", "available")],
+    )
     borrowed_count = fields.Integer(
         string="Số bản đang mượn",
         compute="_compute_borrowed_count",
@@ -24,8 +30,8 @@ class LibraryBook(models.Model):
     )
     loan_line_ids = fields.One2many("library.loan.line", "book_id", string="Chi tiết mượn")
     product_id = fields.Many2one("product.product", string="Sản phẩm", readonly=True, copy=False)
-    qty_available = fields.Float(
-        string="Tồn kho thực tế",
+    qty_available = fields.Integer(
+        string="Có sẵn",
         compute="_compute_qty_available",
         search="_search_qty_available",
         readonly=True,
@@ -38,54 +44,35 @@ class LibraryBook(models.Model):
         ("isbn_unique", "unique(isbn)", "ISBN phải là duy nhất."),
     ]
 
-    @api.depends("product_id")
+    @api.depends("copy_ids.state")
     def _compute_qty_available(self):
-        StockLocation = self.env.ref("stock.stock_location_stock")
         for book in self:
-            if not book.product_id:
-                book.qty_available = 0
-                continue
-            quant = self.env["stock.quant"].search([
-                ("product_id", "=", book.product_id.id),
-                ("location_id", "=", StockLocation.id),
-            ], limit=1)
-            book.qty_available = quant.quantity if quant else 0
+            book.qty_available = len(book.copy_ids.filtered(lambda c: c.state == "available"))
 
     def _search_qty_available(self, operator, value):
-        StockLocation = self.env.ref("stock.stock_location_stock")
-        quants = self.env["stock.quant"].search([
-            ("location_id", "=", StockLocation.id),
-        ])
-        matching_products = set()
-        for quant in quants:
-            qty = quant.quantity
-            if operator == "=" and qty == value:
-                matching_products.add(quant.product_id.id)
-            elif operator == "!=" and qty != value:
-                matching_products.add(quant.product_id.id)
-            elif operator == ">" and qty > value:
-                matching_products.add(quant.product_id.id)
-            elif operator == ">=" and qty >= value:
-                matching_products.add(quant.product_id.id)
-            elif operator == "<" and qty < value:
-                matching_products.add(quant.product_id.id)
-            elif operator == "<=" and qty <= value:
-                matching_products.add(quant.product_id.id)
-            elif operator == "in" and qty in value:
-                matching_products.add(quant.product_id.id)
-            elif operator == "not in" and qty not in value:
-                matching_products.add(quant.product_id.id)
-        if not matching_products:
+        copies = self.env["library.book.copy"].search([("state", "=", "available")])
+        book_ids = copies.mapped("book_id.id")
+        distinct = list(set(book_ids))
+        if operator == "=":
+            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) == value]
+        elif operator == ">":
+            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) > value]
+        elif operator == ">=":
+            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) >= value]
+        elif operator == "<":
+            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) < value]
+        elif operator == "<=":
+            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) <= value]
+        elif operator == "!=":
+            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) != value]
+        else:
             return [("id", "=", False)]
-        return [("product_id", "in", list(matching_products))]
+        return [("id", "in", matching)] if matching else [("id", "=", False)]
 
-    @api.depends("loan_line_ids.state")
+    @api.depends("copy_ids.state")
     def _compute_borrowed_count(self):
         for book in self:
-            active_lines = book.loan_line_ids.filtered(
-                lambda line: line.state in ("approved", "borrowed", "overdue")
-            )
-            book.borrowed_count = len(active_lines)
+            book.borrowed_count = len(book.copy_ids.filtered(lambda c: c.state == "borrowed"))
 
     @api.model
     def _get_book_product_category(self):
@@ -102,6 +89,22 @@ class LibraryBook(models.Model):
                 "res_id": categ.id,
             })
         return categ
+
+    def action_sync_copies_from_stock(self):
+        self.ensure_one()
+        if not self.product_id:
+            raise ValidationError(_("Sách chưa có sản phẩm tồn kho liên kết."))
+        stock_qty = self.product_id.qty_available
+        existing = self.env["library.book.copy"].search_count([("book_id", "=", self.id)])
+        if stock_qty <= existing:
+            return
+        for i in range(existing + 1, int(stock_qty) + 1):
+            self.env["library.book.copy"].create({
+                "book_id": self.id,
+                "code": "%s-%02d" % (self.code, i),
+                "state": "available",
+            })
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):

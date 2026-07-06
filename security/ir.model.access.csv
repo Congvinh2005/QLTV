@@ -29,3 +29,5 @@ access_library_product_product_mgr,library.product.product.mgr,product.model_pro
 access_library_account_move_mgr,library.account.move.mgr,account.model_account_move,group_library_manager,1,1,1,1
 access_library_account_journal_mgr,library.account.journal.mgr,account.model_account_journal,group_library_manager,1,1,0,0
 access_library_account_account_mgr,library.account.account.mgr,account.model_account_account,group_library_manager,1,1,0,0
+access_library_book_copy_user,library.book.copy.user,model_library_book_copy,group_library_user,1,1,1,0
+access_library_book_copy_manager,library.book.copy.manager,model_library_book_copy,group_library_manager,1,1,1,1

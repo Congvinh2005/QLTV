@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_library_book_copy_tree" model="ir.ui.view">
+        <field name="name">library.book.copy.tree</field>
+        <field name="model">library.book.copy</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="book_id" />
+                <field name="code" />
+                <field name="state" widget="badge" decoration-success="state == 'available'"
+                    decoration-warning="state == 'borrowed'" decoration-danger="state in ('damaged', 'lost')" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_library_book_copy_form" model="ir.ui.view">
+        <field name="name">library.book.copy.form</field>
+        <field name="model">library.book.copy</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="book_id" />
+                            <field name="code" />
+                        </group>
+                        <group>
+                            <field name="state" widget="badge" />
+                            <field name="loan_line_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_library_book_copy_search" model="ir.ui.view">
+        <field name="name">library.book.copy.search</field>
+        <field name="model">library.book.copy</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="book_id" />
+                <field name="code" />
+                <filter name="available" string="Có sẵn" domain="[('state', '=', 'available')]" />
+                <filter name="borrowed" string="Đang mượn" domain="[('state', '=', 'borrowed')]" />
+                <filter name="damaged" string="Hư hỏng" domain="[('state', '=', 'damaged')]" />
+                <filter name="lost" string="Mất" domain="[('state', '=', 'lost')]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_library_book_copy" model="ir.actions.act_window">
+        <field name="name">Bản sao sách</field>
+        <field name="res_model">library.book.copy</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

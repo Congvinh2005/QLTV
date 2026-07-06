@@ -85,9 +85,8 @@ class LibraryDashboardController(http.Controller):
         ) or 0
 
         books = Book.search([])
-        products = books.mapped("product_id").filtered(lambda p: p)
-        total_stock_qty = sum(products.mapped("qty_available")) or 0
-        low_stock_count = len(books.filtered(lambda b: b.product_id and b.product_id.qty_available <= 3))
+        total_stock_qty = sum(books.mapped("qty_available")) or 0
+        low_stock_count = len(books.filtered(lambda b: b.qty_available <= 3))
 
         inv_domain = [("loan_id", "!=", False), ("move_type", "=", "out_invoice")]
         invoices = Invoice.search(inv_domain)
@@ -209,7 +208,7 @@ class LibraryDashboardController(http.Controller):
         return {
             "kpis": {
                 "total_books": Book.search_count([]),
-                "total_copies": sum(books.mapped("qty_available")) + sum(books.mapped("borrowed_count")),
+                "total_copies": sum(books.mapped("total_copies")),
                 "available": sum(books.mapped("qty_available")),
                 "total_readers": Reader.search_count([]),
                 "total_loans": Loan.search_count([]),

@@ -21,6 +21,12 @@
         <field name="model">library.book</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_sync_copies_from_stock" type="object"
+                        string="Đồng bộ bản sao từ tồn kho"
+                        class="btn-primary"
+                        attrs="{'invisible': [('product_id', '=', False)]}" />
+                </header>
                 <sheet>
                     <field name="cover_image" widget="image" class="oe_avatar" />
                     <group>
@@ -42,12 +48,24 @@
                         <group>
                             <field name="qty_available" />
                             <field name="borrowed_count" readonly="1" />
+                            <field name="total_copies" />
                         </group>
                         <group>
                             <field name="product_categ_id" />
                             <field name="product_id" readonly="1" />
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Các bản sao" name="copies">
+                            <field name="copy_ids" readonly="0">
+                                <tree editable="bottom">
+                                    <field name="code" />
+                                    <field name="state" widget="badge" />
+                                    <field name="loan_line_id" readonly="1" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" />

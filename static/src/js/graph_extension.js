@@ -13,7 +13,7 @@ export class LibraryGraphController extends GraphController {
             modelName: this.props.resModel,
         });
         const model = this.props.resModel;
-        if (model && model.startsWith("library.")) {
+        if (model && ["library.book", "library.reader", "library.loan"].includes(model)) {
             onWillStart(async () => {
                 try {
                     const data = await this.env.services.rpc("/library/dashboard/data", {});
