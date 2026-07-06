@@ -25,6 +25,7 @@
     ],
     "assets": {
         "web.assets_backend": [
+            "web/static/lib/Chart/Chart.js",
             "QLTV/static/src/js/dashboard_action.js",
             "QLTV/static/src/js/book_list_extension.js",
             "QLTV/static/src/js/kanban_extension.js",

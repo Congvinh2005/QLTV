@@ -1,83 +1,441 @@
-.o_library_dashboard {
-    margin-bottom: 20px;
-    padding: 12px;
-    background: #fafafa;
-    border-radius: 8px;
+.qltv_dashboard_page {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #111827;
 }
 
-.dashboard_row {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
+/* qltv_topbar removed: styles no longer needed */
+
+.qltv_dashboard_page .qltv_dashboard_content {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
 }
 
-.dashboard_card {
-    flex: 1;
-    min-width: 180px;
+.qltv_dashboard_page .qltv_sidebar {
+    background: #FFFFFF;
+    border-radius: 18px;
+    border: 1px solid #EEEEEE;
+    padding: 24px;
+}
+
+.qltv_dashboard_page .sidebar_section + .sidebar_section {
+    margin-top: 30px;
+}
+
+.qltv_dashboard_page .sidebar_label {
+    font-size: 11px;
+    color: #9CA3AF;
+    letter-spacing: 0.15em;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+}
+
+.qltv_dashboard_page .sidebar_item {
     display: flex;
     align-items: center;
-    padding: 20px;
-    border-radius: 10px;
-    color: #333;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transition: 0.3s;
+    gap: 12px;
+    color: #4B5563;
+    font-size: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background 0.2s;
 }
 
-.dashboard_card:hover {
-    transform: translateY(-3px);
+.qltv_dashboard_page .sidebar_item:hover {
+    background: #F3F4F6;
 }
 
-.dashboard_card .icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: white;
+.qltv_dashboard_page .sidebar_item.active {
+    background: #EEEBFB;
+    color: #5B4CD6;
+}
+
+.qltv_dashboard_page .sidebar_item.active i,
+.qltv_dashboard_page .sidebar_item.active {
+    color: #5B4CD6;
+}
+
+.qltv_dashboard_page .sidebar_item i {
+    width: 20px;
+    text-align: center;
+}
+
+.qltv_dashboard_page .qltv_main {
+    min-height: 100vh;
+}
+
+.qltv_dashboard_page .dashboard_grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.qltv_dashboard_page .dashboard_card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    padding: 24px;
+}
+
+.qltv_dashboard_page .dashboard_card.small {
+    grid-column: span 2;
     display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.qltv_dashboard_page .dashboard_card.medium {
+    grid-column: span 4;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.qltv_dashboard_page .dashboard_card.large {
+    grid-column: span 6;
+    min-height: 140px;
+}
+
+.qltv_dashboard_page .dashboard_card.large.left {
+    background: linear-gradient(180deg, #F1EEFD 0%, #FFFFFF 100%);
+}
+
+.qltv_dashboard_page .dashboard_card.large.right {
+    background: #FEF2F2;
+}
+
+.qltv_dashboard_page .dashboard_card.invoice {
+    grid-column: span 12;
+}
+
+.qltv_dashboard_page .dashboard_card.chart_card {
+    grid-column: span 4;
+    min-height: 380px;
+}
+
+.qltv_dashboard_page .dashboard_card.table_card {
+    grid-column: span 4;
+    padding: 20px 22px;
+}
+
+.qltv_dashboard_page .card_icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: rgba(59, 130, 246, 0.08);
+    color: #2563EB;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    margin-right: 18px;
+    font-size: 20px;
 }
 
-.dashboard_card .number {
-    font-size: 30px;
+.qltv_dashboard_page .dashboard_card.purple .card_icon {
+    background: rgba(124, 58, 237, 0.08);
+    color: #7C3AED;
+}
+
+.qltv_dashboard_page .dashboard_card.green .card_icon {
+    background: rgba(52, 211, 153, 0.12);
+    color: #16A34A;
+}
+
+.qltv_dashboard_page .dashboard_card.yellow .card_icon {
+    background: rgba(253, 186, 116, 0.16);
+    color: #EA580C;
+}
+
+.qltv_dashboard_page .dashboard_card.pink .card_icon {
+    background: rgba(254, 226, 226, 0.92);
+    color: #DC2626;
+}
+
+.qltv_dashboard_page .dashboard_card.teal .card_icon {
+    background: rgba(34, 211, 238, 0.12);
+    color: #0D9488;
+}
+
+.qltv_dashboard_page .dashboard_card.orange .card_icon,
+.qltv_dashboard_page .invoice_item .icon_wrap {
+    background: rgba(251, 191, 36, 0.12);
+    color: #EA580C;
+}
+
+.qltv_dashboard_page .dashboard_card.gray .card_icon {
+    background: rgba(229, 231, 235, 0.8);
+    color: #6B7280;
+}
+
+.qltv_dashboard_page .card_info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.qltv_dashboard_page .number {
+    font-size: 34px;
     font-weight: 700;
 }
 
-.dashboard_card .title {
-    margin-top: 5px;
-    font-size: 15px;
-    color: #555;
+.qltv_dashboard_page .title {
+    color: #6B7280;
+    font-size: 14px;
 }
 
-.blue {
-    background: #EAF4FF;
+.qltv_dashboard_page .trend {
+    font-size: 13px;
+    font-weight: 600;
 }
 
-.green {
-    background: #E9F9EE;
+.qltv_dashboard_page .trend.up {
+    color: #16A34A;
 }
 
-.yellow {
-    background: #FFF8DD;
+.qltv_dashboard_page .trend.down {
+    color: #DC2626;
 }
 
-.red {
-    background: #FFEAEA;
+.qltv_dashboard_page .large_card_content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
 }
 
-.purple {
-    background: #F2ECFF;
+.qltv_dashboard_page .large_card_icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    background: rgba(124, 58, 237, 0.12);
+    color: #7C3AED;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
 }
 
-.teal {
-    background: #E0F7FA;
+.qltv_dashboard_page .large_number {
+    font-size: 42px;
+    font-weight: 700;
 }
 
-.orange {
-    background: #FFF3E0;
+.qltv_dashboard_page .large_title {
+    color: #4B5563;
+    font-size: 16px;
 }
 
-.gray {
-    background: #F5F5F5;
+.qltv_dashboard_page .large_title span {
+    color: #6B7280;
+    font-size: 13px;
+}
+
+.qltv_dashboard_page .invoice_grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.qltv_dashboard_page .invoice_item {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.qltv_dashboard_page .icon_wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.qltv_dashboard_page .chart_card .card_header,
+.qltv_dashboard_page .table_card .table_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #111827;
+}
+
+.qltv_dashboard_page .header_action,
+.qltv_dashboard_page .header_link {
+    color: #5B4CD6;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.qltv_dashboard_page .chart_body {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+}
+
+.qltv_dashboard_page .pie_chart_wrap,
+.qltv_dashboard_page .line_chart_wrap {
+    width: 100%;
+    position: relative;
+}
+
+.qltv_dashboard_page .chart_legend {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 160px;
+}
+
+.qltv_dashboard_page .legend_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #374151;
+    font-size: 14px;
+}
+
+.qltv_dashboard_page .legend_color {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.qltv_dashboard_page .trend_legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    color: #4B5563;
+    font-size: 14px;
+}
+
+.qltv_dashboard_page .legend_dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.qltv_dashboard_page .legend_dot.purple { background: #7C3AED; }
+.qltv_dashboard_page .legend_dot.green { background: #22C55E; }
+
+.qltv_dashboard_page .top_books_list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.qltv_dashboard_page .top_book_row {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.qltv_dashboard_page .top_book_index {
+    color: #9CA3AF;
+    font-weight: 700;
+}
+
+.qltv_dashboard_page .top_book_info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.qltv_dashboard_page .book_name {
+    font-weight: 600;
+    color: #111827;
+}
+
+.qltv_dashboard_page .progress_bar {
+    width: 100%;
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.qltv_dashboard_page .progress_fill {
+    height: 100%;
+    border-radius: 999px;
+    background: #7C3AED;
+}
+
+.qltv_dashboard_page .book_count {
+    min-width: 36px;
+    text-align: right;
+    font-weight: 700;
+}
+
+.qltv_dashboard_page .table_card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.qltv_dashboard_page .table_card th,
+.qltv_dashboard_page .table_card td {
+    text-align: left;
+    padding: 10px 0;
+    border-bottom: 1px solid #F3F4F6;
+    font-size: 14px;
+    color: #374151;
+}
+
+.qltv_dashboard_page .table_card th {
+    font-weight: 700;
+    color: #4B5563;
+}
+
+.qltv_dashboard_page .table_card tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.qltv_dashboard_page .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.qltv_dashboard_page .badge_blue {
+    background: #DBEAFE;
+    color: #2563EB;
+}
+
+.qltv_dashboard_page .badge_green {
+    background: #DCFCE7;
+    color: #16A34A;
+}
+
+.qltv_dashboard_page .badge_gray {
+    background: #F3F4F6;
+    color: #6B7280;
+}
+
+@media screen and (max-width: 1280px) {
+    .qltv_dashboard_page .qltv_dashboard_content {
+        grid-template-columns: 1fr;
+    }
+    .qltv_dashboard_page .dashboard_grid {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    .qltv_dashboard_page .dashboard_card.small,
+    .qltv_dashboard_page .dashboard_card.medium,
+    .qltv_dashboard_page .dashboard_card.large,
+    .qltv_dashboard_page .dashboard_card.chart_card,
+    .qltv_dashboard_page .dashboard_card.table_card,
+    .qltv_dashboard_page .dashboard_card.invoice {
+        grid-column: span 1;
+    }
 }

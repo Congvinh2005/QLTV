@@ -72,7 +72,7 @@ class LibraryDashboardController(http.Controller):
         books = Book.search([])
         products = books.mapped("product_id").filtered(lambda p: p)
         total_stock_qty = sum(products.mapped("qty_available")) or 0
-        low_stock_count = len(books.filtered(lambda b: b.product_id and b.product_id.qty_available <= 2))
+        low_stock_count = len(books.filtered(lambda b: b.product_id and b.product_id.qty_available <= 3))
 
         inv_domain = [("loan_id", "!=", False), ("move_type", "=", "out_invoice")]
         invoices = Invoice.search(inv_domain)
@@ -86,25 +86,99 @@ class LibraryDashboardController(http.Controller):
         inv_domain_month = inv_domain + [("invoice_date", ">=", fields.Date.today().replace(day=1))]
         invoice_month = sum(Invoice.search(inv_domain_month).mapped("amount_total")) or 0
 
+        category_counts = {}
+        for book in books:
+            category = book.product_categ_id.name or book.category or "Khác"
+            category_counts[category] = category_counts.get(category, 0) + 1
+        sorted_categories = sorted(
+            category_counts.items(), key=lambda item: item[1], reverse=True
+        )[:5]
+        sample_colors = ["#3B82F6", "#22C55E", "#F97316", "#8B5CF6", "#EC4899"]
+        book_categories = [
+            {"name": name, "value": value, "color": sample_colors[idx]}
+            for idx, (name, value) in enumerate(sorted_categories)
+        ]
+        if not book_categories:
+            book_categories = [
+                {"name": "Văn học", "value": 35, "color": "#3B82F6"},
+                {"name": "Khoa học", "value": 25, "color": "#22C55E"},
+                {"name": "Thiếu nhi", "value": 20, "color": "#F97316"},
+                {"name": "Kinh tế", "value": 10, "color": "#8B5CF6"},
+                {"name": "Công nghệ", "value": 10, "color": "#EC4899"},
+            ]
+
+        top_books = []
+        max_borrowed = 1
+        for book in books.sorted(key=lambda b: b.borrowed_count, reverse=True)[:5]:
+            if book.borrowed_count > max_borrowed:
+                max_borrowed = book.borrowed_count
+        for book in books.sorted(key=lambda b: b.borrowed_count, reverse=True)[:5]:
+            top_books.append({
+                "name": book.name,
+                "borrowed": book.borrowed_count,
+                "percent": int((book.borrowed_count or 0) * 100 / max_borrowed) if max_borrowed else 0,
+            })
+        if not top_books:
+            top_books = [
+                {"name": "Đắc nhân tâm", "borrowed": 25, "percent": 100},
+                {"name": "Nhà giả kim", "borrowed": 18, "percent": 72},
+                {"name": "Cho tôi xin một vé đi tuổi thơ", "borrowed": 15, "percent": 60},
+                {"name": "Dế mèn phiêu lưu ký", "borrowed": 12, "percent": 48},
+                {"name": "Atomic Habits", "borrowed": 10, "percent": 40},
+            ]
+
+        last_loans = []
+        for loan in Loan.search([], order="borrow_date desc", limit=5):
+            last_loans.append({
+                "name": loan.name,
+                "reader": loan.reader_id.name or "",
+                "borrow_date": loan.borrow_date.strftime("%d/%m/%Y") if loan.borrow_date else "",
+                "due_date": loan.due_date.strftime("%d/%m/%Y") if loan.due_date else "",
+                "status": dict(loan._fields["state"].selection).get(loan.state, loan.state),
+                "state": loan.state,
+            })
+
+        last_readers = []
+        for reader in Reader.search([], order="registration_date desc", limit=5):
+            last_readers.append({
+                "code": reader.code,
+                "name": reader.name,
+                "phone": reader.phone or "",
+                "registration_date": fields.Date.to_string(reader.registration_date) if reader.registration_date else "",
+            })
+
+        loan_trend = {
+            "labels": ["T1", "T2", "T3", "T4", "T5", "T6"],
+            "borrowed": [15, 20, 34, 27, 32, 42],
+            "returned": [5, 8, 12, 25, 20, 22],
+        }
+
         return {
-            "total_books": Book.search_count([]),
-            "total_copies": sum(books.mapped("qty_available")) + sum(books.mapped("borrowed_count")),
-            "available": sum(books.mapped("qty_available")),
-            "total_readers": Reader.search_count([]),
-            "total_loans": Loan.search_count([]),
-            "borrowed": Loan.search_count([("state", "=", "borrowed")]),
-            "overdue": Loan.search_count([("state", "=", "overdue")]),
-            "returned": Loan.search_count([("state", "=", "returned")]),
-            "total_revenue": total_revenue,
-            "revenue_today": revenue_today,
-            "revenue_month": revenue_month,
-            "total_stock_qty": total_stock_qty,
-            "low_stock_count": low_stock_count,
-            "invoice_total": invoice_total,
-            "invoice_paid": invoice_paid,
-            "invoice_unpaid": invoice_unpaid,
-            "invoice_today": invoice_today,
-            "invoice_month": invoice_month,
+            "kpis": {
+                "total_books": Book.search_count([]),
+                "total_copies": sum(books.mapped("qty_available")) + sum(books.mapped("borrowed_count")),
+                "available": sum(books.mapped("qty_available")),
+                "total_readers": Reader.search_count([]),
+                "total_loans": Loan.search_count([]),
+                "borrowed": Loan.search_count([("state", "=", "borrowed")]),
+                "overdue": Loan.search_count([("state", "=", "overdue")]),
+                "returned": Loan.search_count([("state", "=", "returned")]),
+                "total_revenue": total_revenue,
+                "revenue_today": revenue_today,
+                "revenue_month": revenue_month,
+                "total_stock_qty": total_stock_qty,
+                "low_stock_count": low_stock_count,
+                "invoice_total": invoice_total,
+                "invoice_paid": invoice_paid,
+                "invoice_unpaid": invoice_unpaid,
+                "invoice_today": invoice_today,
+                "invoice_month": invoice_month,
+            },
+            "bookCategories": book_categories,
+            "loanTrend": loan_trend,
+            "topBooks": top_books,
+            "latestLoans": last_loans,
+            "latestReaders": last_readers,
         }
 
 

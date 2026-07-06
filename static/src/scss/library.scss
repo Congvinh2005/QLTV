@@ -32,6 +32,122 @@
     background: #F5F5F5;
 }
 
+.o_library_dashboard {
+    display: grid;
+    gap: 24px;
+}
+
+.o_library_dashboard .dashboard_row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.o_library_dashboard .dashboard_card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background-color: #F8FAFC;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 18px 20px;
+    min-height: 96px;
+}
+
+.o_library_dashboard .dashboard_card.blue {
+    background-color: rgba(59, 130, 246, 0.16) !important;
+}
+
+.o_library_dashboard .dashboard_card.teal {
+    background-color: rgba(20, 184, 166, 0.16) !important;
+}
+
+.o_library_dashboard .dashboard_card.purple {
+    background-color: rgba(124, 58, 237, 0.16) !important;
+}
+
+.o_library_dashboard .dashboard_card.yellow {
+    background-color: rgba(245, 158, 11, 0.14) !important;
+}
+
+.o_library_dashboard .dashboard_card.green {
+    background-color: rgba(34, 197, 94, 0.14) !important;
+}
+
+.o_library_dashboard .dashboard_card.orange {
+    background-color: rgba(249, 115, 22, 0.14) !important;
+}
+
+.o_library_dashboard .dashboard_card.gray {
+    background-color: rgba(107, 114, 128, 0.12) !important;
+}
+
+.o_library_dashboard .dashboard_card.red {
+    background-color: rgba(239, 68, 68, 0.14) !important;
+}
+
+.o_library_dashboard .dashboard_card .icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #111827;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.o_library_dashboard .dashboard_card.blue .icon {
+    background: #3B82F6;
+}
+
+.o_library_dashboard .dashboard_card.teal .icon {
+    background: #14B8A6;
+}
+
+.o_library_dashboard .dashboard_card.purple .icon {
+    background: #8B5CF6;
+}
+
+.o_library_dashboard .dashboard_card.yellow .icon {
+    background: #F59E0B;
+}
+
+.o_library_dashboard .dashboard_card.green .icon {
+    background: #22C55E;
+}
+
+.o_library_dashboard .dashboard_card.orange .icon {
+    background: #F97316;
+}
+
+.o_library_dashboard .dashboard_card.gray .icon {
+    background: #6B7280;
+}
+
+.o_library_dashboard .dashboard_card.red .icon {
+    background: #EF4444;
+}
+
+.o_library_dashboard .dashboard_card .content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.o_library_dashboard .dashboard_card .number {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.o_library_dashboard .dashboard_card .title {
+    font-size: 14px;
+    color: #6B7280;
+}
+
 .o_field_password_toggle .o_input-group-append .btn {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
