@@ -8,17 +8,29 @@
                 <field name="code" />
                 <field name="name" />
                 <field name="author" />
+                <field name="category" />
+                <field name="publisher" />
                 <field name="qty_available" />
+                <field name="borrowed_count" />
+                <field name="price" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click o_library_book_card">
-                            <div class="o_kanban_record_title">
-                                <strong><field name="name"/></strong>
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_title">
+                                    <strong><field name="name"/></strong>
+                                </div>
                             </div>
-                            <div><small><field name="code"/></small></div>
-                            <div><field name="author"/></div>
-                            <div>
-                                <span class="badge badge-pill badge-secondary">Còn: <field name="qty_available"/></span>
+                            <div class="o_kanban_record_body">
+                                <div><i class="fa fa-hashtag"/> Mã sách: <field name="code"/></div>
+                                <div><i class="fa fa-user"/> Tác giả: <field name="author"/></div>
+                                <div><i class="fa fa-tag"/> Thể loại: <field name="category"/></div>
+                                <div><i class="fa fa-building"/> NXB: <field name="publisher"/></div>
+                                <div class="mt-1">
+                                    <span class="badge badge-info">Tồn: <field name="qty_available"/></span>
+                                    <span class="badge badge-warning">Đang mượn: <field name="borrowed_count"/></span>
+                                    <span class="badge badge-success"><field name="price"/> đ</span>
+                                </div>
                             </div>
                         </div>
                     </t>
