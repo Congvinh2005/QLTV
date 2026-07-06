@@ -21,12 +21,6 @@
         <field name="model">library.book</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <button name="action_sync_copies_from_stock" type="object"
-                        string="Đồng bộ bản sao từ tồn kho"
-                        class="btn-primary"
-                        attrs="{'invisible': [('product_id', '=', False)]}" />
-                </header>
                 <sheet>
                     <field name="cover_image" widget="image" class="oe_avatar" />
                     <group>

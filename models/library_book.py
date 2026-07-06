@@ -90,6 +90,18 @@ class LibraryBook(models.Model):
             })
         return categ
 
+    def _generate_copies(self):
+        self.ensure_one()
+        existing = self.env["library.book.copy"].search_count([("book_id", "=", self.id)])
+        if self.total_copies <= existing:
+            return
+        for i in range(existing + 1, self.total_copies + 1):
+            self.env["library.book.copy"].create({
+                "book_id": self.id,
+                "code": "%s-%02d" % (self.code, i),
+                "state": "available",
+            })
+
     def action_sync_copies_from_stock(self):
         self.ensure_one()
         if not self.product_id:
@@ -123,10 +135,14 @@ class LibraryBook(models.Model):
             book.product_id = product
             if not book.product_categ_id:
                 book.product_categ_id = categ
+            book._generate_copies()
         return books
 
     def write(self, vals):
         res = super().write(vals)
+        if "total_copies" in vals:
+            for book in self:
+                book._generate_copies()
         if "name" in vals or "isbn" in vals or "price" in vals:
             for book in self:
                 if book.product_id:
