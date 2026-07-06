@@ -19,13 +19,18 @@ export class LibraryDashboard extends Component {
         this.chartInstances = { pie: null, line: null };
 
         onWillStart(async () => {
-            const data = await this.rpc("/library/dashboard/data", {});
-            this.state.kpis = data.kpis || {};
-            this.state.bookCategories = data.bookCategories || [];
-            this.state.loanTrend = data.loanTrend || { labels: [], borrowed: [], returned: [] };
-            this.state.topBooks = data.topBooks || [];
-            this.state.latestLoans = data.latestLoans || [];
-            this.state.latestReaders = data.latestReaders || [];
+            try {
+                const data = await this.rpc("/library/dashboard/data", {});
+                this.state.kpis = data.kpis || {};
+                this.state.bookCategories = data.bookCategories || [];
+                this.state.loanTrend = data.loanTrend || { labels: [], borrowed: [], returned: [] };
+                this.state.topBooks = data.topBooks || [];
+                this.state.latestLoans = data.latestLoans || [];
+                this.state.latestReaders = data.latestReaders || [];
+                this.renderCharts();
+            } catch (e) {
+                console.error("QLTV Dashboard load error:", e);
+            }
         });
 
         onMounted(() => {

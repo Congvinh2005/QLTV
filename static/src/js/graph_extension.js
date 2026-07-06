@@ -17,7 +17,7 @@ export class LibraryGraphController extends GraphController {
             onWillStart(async () => {
                 try {
                     const data = await this.env.services.rpc("/library/dashboard/data", {});
-                    this.dashboardState.kpis = data;
+                    this.dashboardState.kpis = data.kpis;
                 } catch (e) {
                     console.error("QLTV Dashboard graph load error:", e);
                 }

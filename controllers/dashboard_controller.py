@@ -46,6 +46,21 @@ class LibraryDashboardController(http.Controller):
         today_end = today_start + timedelta(days=1)
         month_start = today_start.replace(day=1)
 
+        def percent_change(current, previous):
+            if previous == 0:
+                return 100 if current > 0 else 0
+            return int(round((current - previous) * 100.0 / previous))
+
+        def prev_month(date):
+            if date.month == 1:
+                return date.replace(year=date.year - 1, month=12)
+            return date.replace(month=date.month - 1)
+
+        def next_month(date):
+            if date.month == 12:
+                return date.replace(year=date.year + 1, month=1)
+            return date.replace(month=date.month + 1)
+
         Book = request.env["library.book"].sudo()
         Reader = request.env["library.reader"].sudo()
         Loan = request.env["library.loan"].sudo()
@@ -109,23 +124,61 @@ class LibraryDashboardController(http.Controller):
 
         top_books = []
         max_borrowed = 1
-        for book in books.sorted(key=lambda b: b.borrowed_count, reverse=True)[:5]:
+        sorted_books = books.sorted(key=lambda b: b.borrowed_count, reverse=True)[:5]
+        for book in sorted_books:
             if book.borrowed_count > max_borrowed:
                 max_borrowed = book.borrowed_count
-        for book in books.sorted(key=lambda b: b.borrowed_count, reverse=True)[:5]:
+        for idx, book in enumerate(sorted_books):
             top_books.append({
+                "rank": idx + 1,
                 "name": book.name,
                 "borrowed": book.borrowed_count,
                 "percent": int((book.borrowed_count or 0) * 100 / max_borrowed) if max_borrowed else 0,
             })
         if not top_books:
             top_books = [
-                {"name": "Đắc nhân tâm", "borrowed": 25, "percent": 100},
-                {"name": "Nhà giả kim", "borrowed": 18, "percent": 72},
-                {"name": "Cho tôi xin một vé đi tuổi thơ", "borrowed": 15, "percent": 60},
-                {"name": "Dế mèn phiêu lưu ký", "borrowed": 12, "percent": 48},
-                {"name": "Atomic Habits", "borrowed": 10, "percent": 40},
+                {"rank": 1, "name": "Đắc nhân tâm", "borrowed": 25, "percent": 100},
+                {"rank": 2, "name": "Nhà giả kim", "borrowed": 18, "percent": 72},
+                {"rank": 3, "name": "Cho tôi xin một vé đi tuổi thơ", "borrowed": 15, "percent": 60},
+                {"rank": 4, "name": "Dế mèn phiêu lưu ký", "borrowed": 12, "percent": 48},
+                {"rank": 5, "name": "Atomic Habits", "borrowed": 10, "percent": 40},
             ]
+
+        def normalize_date(dt):
+            return dt.replace(day=1)
+
+        def next_month(dt):
+            if dt.month == 12:
+                return dt.replace(year=dt.year + 1, month=1)
+            return dt.replace(month=dt.month + 1)
+
+        today = fields.Date.today()
+        current_month = normalize_date(today)
+        months = [current_month]
+        for _ in range(5):
+            previous = months[0]
+            if previous.month == 1:
+                months.insert(0, previous.replace(year=previous.year - 1, month=12))
+            else:
+                months.insert(0, previous.replace(month=previous.month - 1))
+
+        loan_trend_labels = [m.strftime("%m/%Y") if hasattr(m, 'strftime') else m for m in months]
+        loan_trend_borrowed = []
+        loan_trend_returned = []
+        for month in months:
+            month_start = month
+            month_end = next_month(month_start)
+            borrowed_count = Loan.search_count([
+                ("borrow_date", ">=", month_start),
+                ("borrow_date", "<", month_end),
+            ])
+            returned_count = Loan.search_count([
+                ("return_date", ">=", month_start),
+                ("return_date", "<", month_end),
+                ("state", "=", "returned"),
+            ])
+            loan_trend_borrowed.append(borrowed_count)
+            loan_trend_returned.append(returned_count)
 
         last_loans = []
         for loan in Loan.search([], order="borrow_date desc", limit=5):
@@ -148,9 +201,9 @@ class LibraryDashboardController(http.Controller):
             })
 
         loan_trend = {
-            "labels": ["T1", "T2", "T3", "T4", "T5", "T6"],
-            "borrowed": [15, 20, 34, 27, 32, 42],
-            "returned": [5, 8, 12, 25, 20, 22],
+            "labels": loan_trend_labels,
+            "borrowed": loan_trend_borrowed,
+            "returned": loan_trend_returned,
         }
 
         return {

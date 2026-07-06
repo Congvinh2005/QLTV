@@ -215,7 +215,7 @@
                             <div class="top_books_list">
                                 <t t-foreach="state.topBooks" t-as="book" t-key="book.name">
                                     <div class="top_book_row">
-                                        <div class="top_book_index"><t t-esc="loop.index"/></div>
+                                        <div class="top_book_index"><t t-esc="book.rank"/></div>
                                         <div class="top_book_info">
                                             <div class="book_name"><t t-esc="book.name"/></div>
                                             <div class="progress_bar">

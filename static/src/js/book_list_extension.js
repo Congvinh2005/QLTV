@@ -15,8 +15,12 @@ export class LibraryListController extends ListController {
         const model = this.props.resModel;
         if (model && model.startsWith("library.")) {
             onWillStart(async () => {
-                const data = await this.rpc("/library/dashboard/data", {});
-                this.dashboardState.kpis = data;
+                try {
+                    const data = await this.rpc("/library/dashboard/data", {});
+                    this.dashboardState.kpis = data.kpis;
+                } catch (e) {
+                    console.error("QLTV Dashboard list load error:", e);
+                }
             });
         }
     }

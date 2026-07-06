@@ -17,7 +17,7 @@ export class LibraryPivotController extends PivotController {
             onWillStart(async () => {
                 try {
                     const data = await this.env.services.rpc("/library/dashboard/data", {});
-                    this.dashboardState.kpis = data;
+                    this.dashboardState.kpis = data.kpis;
                 } catch (e) {
                     console.error("QLTV Dashboard pivot load error:", e);
                 }
