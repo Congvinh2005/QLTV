@@ -21,12 +21,12 @@ class LibraryLoan(models.Model):
         required=True,
         tracking=True,
     )
-    borrow_days = fields.Integer(string="Số ngày mượn", compute="_compute_borrow_days", store=True)
+    borrow_days = fields.Integer(string="Số ngày mượn", default=3, tracking=True)
     due_date = fields.Datetime(
-        string="Ngày hết hạn", compute="_compute_due_date", store=True,
+        string="Ngày hết hạn",
         tracking=True,
     )
-    return_date = fields.Datetime(string="Ngày trả", tracking=True)
+    return_date = fields.Datetime(string="Ngày trả thực tế", tracking=True)
     borrow_fee = fields.Monetary(
         string="Phí mượn",
         currency_field="currency_id",
@@ -64,25 +64,23 @@ class LibraryLoan(models.Model):
     picking_ids = fields.One2many("stock.picking", "loan_id", string="Phiếu kho")
     invoice_ids = fields.One2many("account.move", "loan_id", string="Hoá đơn")
 
-    @api.depends("borrow_date", "return_date")
-    def _compute_borrow_days(self):
-        for loan in self:
-            if loan.borrow_date and loan.return_date and loan.return_date > loan.borrow_date:
-                loan.borrow_days = (loan.return_date - loan.borrow_date).days
+    @api.onchange("borrow_days", "borrow_date")
+    def _onchange_borrow_days(self):
+        if self.borrow_date and self.borrow_days:
+            bd = self.borrow_date
+            if isinstance(bd, datetime):
+                self.due_date = bd + timedelta(days=self.borrow_days)
             else:
-                loan.borrow_days = 0
+                self.due_date = bd + timedelta(days=self.borrow_days)
+        elif self.borrow_date:
+            self.due_date = False
 
-    @api.depends("borrow_date", "borrow_days")
-    def _compute_due_date(self):
-        for loan in self:
-            if loan.borrow_date and loan.borrow_days:
-                bd = loan.borrow_date
-                if isinstance(bd, datetime):
-                    loan.due_date = bd.replace(hour=23, minute=59, second=59) + timedelta(days=loan.borrow_days - 1)
-                else:
-                    loan.due_date = bd + timedelta(days=loan.borrow_days)
-            else:
-                loan.due_date = False
+    @api.onchange("due_date")
+    def _onchange_due_date(self):
+        if self.borrow_date and self.due_date:
+            delta = self.due_date - self.borrow_date
+            if isinstance(delta, timedelta):
+                self.borrow_days = delta.days
 
     @api.depends("borrow_fee", "fine_amount")
     def _compute_total_amount(self):

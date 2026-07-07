@@ -66,13 +66,14 @@
                             <field name="name" readonly="1" />
                             <field name="reader_id" />
                             <field name="borrow_date" />
-                            <field name="return_date" />
+                            <field name="borrow_days" />
+                            <field name="due_date" />
                         </group>
                         <group>
                             <field name="borrow_fee" widget="vn_money" />
                             <field name="fine_amount" widget="vn_money" readonly="1" />
                             <field name="total_amount" widget="vn_money" readonly="1" />
-                            <field name="due_date" widget="vn_datetime" readonly="1" />
+                            <field name="return_date" widget="vn_datetime" readonly="1" />
                             <field name="currency_id" invisible="1" />
                         </group>
                     </group>
@@ -84,7 +85,6 @@
                                     <field name="qty_available" string="Tổng số" />
                                     <field name="available_quantity" string="Có sẵn" />
                                     <field name="quantity" string="Số mượn" />
-                                    <field name="state" />
                                 </tree>
                             </field>
                         </page>
@@ -124,8 +124,10 @@
                 <group expand="0" string="Nhóm theo">
                     <filter name="group_state" string="Trạng thái" context="{'group_by': 'state'}" />
                     <filter name="group_reader" string="Bạn đọc" context="{'group_by': 'reader_id'}" />
-                    <filter name="group_borrow_date" string="Ngày mượn" context="{'group_by': 'borrow_date'}" />
-                    <filter name="group_return_date" string="Ngày trả" context="{'group_by': 'return_date'}" />
+                    <filter name="group_borrow_date" string="Ngày mượn"
+                        context="{'group_by': 'borrow_date'}" />
+                    <filter name="group_return_date" string="Ngày trả"
+                        context="{'group_by': 'return_date'}" />
                 </group>
             </search>
         </field>
