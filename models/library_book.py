@@ -110,6 +110,7 @@ class LibraryBook(models.Model):
             raise ValidationError(_("Sách chưa có sản phẩm tồn kho liên kết."))
         stock_qty = int(self.product_id.qty_available)
         self._sync_copies_to_target(stock_qty)
+        self.total_copies = stock_qty
         return True
 
     def _sync_copies_to_target(self, target):
