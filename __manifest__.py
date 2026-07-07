@@ -18,6 +18,7 @@
         "views/library_book_copy_views.xml",
         "views/library_reader_views.xml",
         "views/library_borrow_views.xml",
+        "views/library_borrow_kanban_views.xml",
         "views/library_reader_views_self.xml",
         "views/dashboard_views.xml",
         "views/menu_views.xml",

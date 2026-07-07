@@ -55,12 +55,16 @@ class LibraryLoan(models.Model):
             ("returned", "Đã trả"),
             ("overdue", "Quá hạn"),
         ],
-        string="Trạng thái",
         default="draft",
+        string="Trạng thái",
         required=True,
         tracking=True,
     )
     line_ids = fields.One2many("library.loan.line", "loan_id", string="Sách", copy=True)
+    total_quantity = fields.Integer(
+        string="Tổng số lượng",
+        compute="_compute_total_quantity",
+    )
     picking_ids = fields.One2many("stock.picking", "loan_id", string="Phiếu kho")
     invoice_ids = fields.One2many("account.move", "loan_id", string="Hoá đơn")
 
@@ -86,6 +90,11 @@ class LibraryLoan(models.Model):
     def _compute_total_amount(self):
         for loan in self:
             loan.total_amount = (loan.borrow_fee or 0) + (loan.fine_amount or 0)
+
+    @api.depends("line_ids")
+    def _compute_total_quantity(self):
+        for loan in self:
+            loan.total_quantity = sum(loan.line_ids.mapped("quantity"))
 
     @api.model
     def _default_reader_id(self):

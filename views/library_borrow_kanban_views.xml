@@ -7,15 +7,97 @@
             <kanban default_group_by="state" class="o_kanban_small_column">
                 <field name="name" />
                 <field name="reader_id" />
+                <field name="borrow_date" />
                 <field name="due_date" />
+                <field name="borrow_days" />
+                <field name="borrow_fee" />
+                <field name="fine_amount" />
+                <field name="total_amount" />
+                <field name="total_quantity" />
                 <field name="state" />
+                <field name="line_ids" />
+                <field name="currency_id" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click o_library_loan_card">
-                            <strong><field name="name"/></strong>
-                            <div><field name="reader_id"/></div>
-                            <div><span>Hạn trả: </span><field name="due_date"/></div>
-                            <field name="state" widget="badge"/>
+                        <t t-set="state_color" t-value="'#9E9E9E'" />
+                        <t t-set="state_color" t-value="record.state.raw_value == 'draft' and '#66BB6A' or state_color" />
+                        <t t-set="state_color" t-value="record.state.raw_value == 'approved' and '#42A5F5' or state_color" />
+                        <t t-set="state_color" t-value="record.state.raw_value == 'borrowed' and '#FF9800' or state_color" />
+                        <t t-set="state_color" t-value="record.state.raw_value == 'overdue' and '#EF5350' or state_color" />
+                        <t t-set="state_label" t-value="'Đã trả'" />
+                        <t t-set="state_label" t-value="record.state.raw_value == 'draft' and 'Bản nháp' or state_label" />
+                        <t t-set="state_label" t-value="record.state.raw_value == 'approved' and 'Đã duyệt' or state_label" />
+                        <t t-set="state_label" t-value="record.state.raw_value == 'borrowed' and 'Đang mượn' or state_label" />
+                        <t t-set="state_label" t-value="record.state.raw_value == 'overdue' and 'Quá hạn' or state_label" />
+                        <div class="oe_kanban_global_click" style="border-radius: 8px; background: white; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 12px; margin: 4px; width: 280px; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">
+
+                            <!-- Header -->
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div>
+                                    <div style="font-size: 15px; font-weight: 700; color: #111827;">
+                                        <field name="name" />
+                                    </div>
+                                    <div style="font-size: 12px; color: #6B7280;">
+                                        <span style="color: #111827;">Người mượn: </span><field name="reader_id" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="badge" style="background: #2E7D32; color: white; border-radius: 4px; padding: 4px 8px; font-weight: bold; font-size: 11px;">
+                                        <t t-esc="record.total_quantity.raw_value or 0" /> quyển
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Status badge -->
+                            <div class="d-flex justify-content-end mb-2">
+                                <span class="badge" t-att-style="'background: ' + state_color + '; color: white; border-radius: 4px; padding: 3px 8px; font-size: 11px;'">
+                                    <t t-esc="state_label" />
+                                </span>
+                            </div>
+
+                            <!-- Info grid -->
+                            <div class="d-flex mb-2" style="border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden;">
+                                <div class="text-center flex-grow-1" style="border-right: 1px solid #e5e7eb; padding: 6px 4px;">
+                                    <div style="font-size: 11px; font-weight: 600; color: #111827;"><field name="borrow_date" /></div>
+                                    <div class="text-muted small" style="font-size: 10px;">Ngày mượn</div>
+                                </div>
+                                <div class="text-center flex-grow-1" style="border-right: 1px solid #e5e7eb; padding: 6px 4px;">
+                                    <div style="font-size: 11px; font-weight: 600; color: #111827;"><field name="due_date" /></div>
+                                    <div class="text-muted small" style="font-size: 10px;">Hạn trả</div>
+                                </div>
+                                <div class="text-center flex-grow-1" style="padding: 6px 4px;">
+                                    <div style="font-size: 11px; font-weight: 600; color: #111827;"><field name="borrow_days" /> ngày</div>
+                                    <div class="text-muted small" style="font-size: 10px;">Số ngày</div>
+                                </div>
+                            </div>
+
+                            <!-- Total amount -->
+                            <div class="d-flex justify-content-between mb-2" style="padding: 0 4px;">
+                                <span class="text-muted" style="font-size: 11px; color: #6B7280;">Tổng tiền</span>
+                                <span style="font-weight: 600; font-size: 12px; color: #111827;">
+                                    <t t-esc="record.total_amount.raw_value or 0" />₫
+                                </span>
+                            </div>
+
+                            <!-- Book list footer -->
+                            <div style="border-top: 1px solid #e5e7eb; padding-top: 8px;">
+                                <div class="text-muted mb-1" style="font-size: 10px; color: #6B7280;">Sách:</div>
+                                <t t-set="books" t-value="record.line_ids.records || []" />
+                                <t t-foreach="books.slice(0, 3)" t-as="line">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span style="color: #2E7D32; margin-right: 6px; font-size: 10px;">•</span>
+                                        <span style="font-size: 11px; color: #374151;">
+                                            <t t-esc="line.data.book_id" />
+                                        </span>
+                                    </div>
+                                </t>
+                                <t t-if="books.length &gt; 3">
+                                    <div class="text-muted" style="padding-left: 14px; font-style: italic; font-size: 10px;">
+                                        +<t t-esc="books.length - 3" /> quyển khác
+                                    </div>
+                                </t>
+                            </div>
+
                         </div>
                     </t>
                 </templates>
