@@ -10,7 +10,7 @@ class LibraryReaderController(http.Controller):
     def my_books(self):
         books = request.env["library.book"].search_read(
             [],
-            ["code", "name", "author", "category", "qty_available"],
+            ["code", "name", "author", "category", "qty_available", "available_quantity"],
         )
         return books
 
@@ -34,7 +34,7 @@ class LibraryReaderController(http.Controller):
         book_ids = kwargs.get("book_ids", [])
         if not book_ids:
             return {"error": "Vui lòng chọn ít nhất một quyển sách."}
-        available = request.env["library.book"].browse(book_ids).filtered(lambda b: b.qty_available > 0)
+        available = request.env["library.book"].browse(book_ids).filtered(lambda b: b.available_quantity > 0)
         if not available:
             return {"error": "Không có sách nào còn để mượn."}
         loan = request.env["library.loan"].create({

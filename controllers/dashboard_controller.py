@@ -14,9 +14,9 @@ class LibraryDashboardController(http.Controller):
         if model == "library.book":
             return {
                 "total": Book.search_count([]),
-                "available": sum(Book.search([]).mapped("qty_available")),
+                "available": sum(Book.search([]).mapped("available_quantity")),
                 "borrowed": sum(Book.search([]).mapped("borrowed_count")),
-                "out_of_stock": Book.search_count([("qty_available", "=", 0)]),
+                "out_of_stock": Book.search_count([("available_quantity", "=", 0)]),
             }
         if model == "library.reader":
             return {
@@ -86,7 +86,7 @@ class LibraryDashboardController(http.Controller):
 
         books = Book.search([])
         total_stock_qty = sum(books.mapped("qty_available")) or 0
-        low_stock_count = len(books.filtered(lambda b: b.qty_available <= 3))
+        low_stock_count = len(books.filtered(lambda b: b.available_quantity <= 3))
 
         inv_domain = [("loan_id", "!=", False), ("move_type", "=", "out_invoice")]
         invoices = Invoice.search(inv_domain)
@@ -208,8 +208,8 @@ class LibraryDashboardController(http.Controller):
         return {
             "kpis": {
                 "total_books": Book.search_count([]),
-                "total_copies": sum(books.mapped("total_copies")),
-                "available": sum(books.mapped("qty_available")),
+                "total_copies": sum(books.mapped("qty_available")),
+                "available": sum(books.mapped("available_quantity")),
                 "total_readers": Reader.search_count([]),
                 "total_loans": Loan.search_count([]),
                 "borrowed": Loan.search_count([("state", "=", "borrowed")]),

@@ -12,6 +12,7 @@
                 <field name="publisher" />
                 <field name="qty_available" />
                 <field name="borrowed_count" />
+                <field name="available_quantity" />
                 <field name="price" />
                 <templates>
                     <t t-name="kanban-box">
@@ -27,8 +28,9 @@
                                 <div><i class="fa fa-tag"/> Thể loại: <field name="category"/></div>
                                 <div><i class="fa fa-building"/> NXB: <field name="publisher"/></div>
                                 <div class="mt-1">
-                                    <span class="badge badge-info">Tồn: <field name="qty_available"/></span>
+                                    <span class="badge badge-info">Tổng: <field name="qty_available"/></span>
                                     <span class="badge badge-warning">Đang mượn: <field name="borrowed_count"/></span>
+                                    <span class="badge badge-success">Còn: <field name="available_quantity"/></span>
                                     <span class="badge badge-success"><field name="price"/> đ</span>
                                 </div>
                             </div>

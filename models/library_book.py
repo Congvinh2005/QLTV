@@ -31,9 +31,15 @@ class LibraryBook(models.Model):
     loan_line_ids = fields.One2many("library.loan.line", "book_id", string="Chi tiết mượn")
     product_id = fields.Many2one("product.product", string="Sản phẩm", readonly=True, copy=False)
     qty_available = fields.Integer(
+        string="Tổng số bản",
+        compute="_compute_total_quantity",
+        search="_search_total_quantity",
+        readonly=True,
+    )
+    available_quantity = fields.Integer(
         string="Có sẵn",
-        compute="_compute_qty_available",
-        search="_search_qty_available",
+        compute="_compute_available_quantity",
+        search="_search_available_quantity",
         readonly=True,
     )
     product_categ_id = fields.Many2one("product.category", string="Danh mục sản phẩm")
@@ -44,30 +50,39 @@ class LibraryBook(models.Model):
         ("isbn_unique", "unique(isbn)", "ISBN phải là duy nhất."),
     ]
 
-    @api.depends("copy_ids.state")
-    def _compute_qty_available(self):
+    @api.depends("product_id")
+    def _compute_total_quantity(self):
         for book in self:
-            book.qty_available = len(book.copy_ids.filtered(lambda c: c.state == "available"))
+            book.qty_available = book.product_id.qty_available if book.product_id else 0
 
-    def _search_qty_available(self, operator, value):
-        copies = self.env["library.book.copy"].search([("state", "=", "available")])
-        book_ids = copies.mapped("book_id.id")
-        distinct = list(set(book_ids))
-        if operator == "=":
-            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) == value]
-        elif operator == ">":
-            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) > value]
-        elif operator == ">=":
-            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) >= value]
-        elif operator == "<":
-            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) < value]
-        elif operator == "<=":
-            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) <= value]
-        elif operator == "!=":
-            matching = [bid for bid in distinct if len(copies.filtered(lambda c: c.book_id.id == bid)) != value]
-        else:
-            return [("id", "=", False)]
-        return [("id", "in", matching)] if matching else [("id", "=", False)]
+    def _search_total_quantity(self, operator, value):
+        products = self.env["product.product"].search([("qty_available", operator, value)])
+        return [("product_id", "in", products.ids)] if products else [("product_id", "=", False)]
+
+    @api.depends("qty_available", "borrowed_count")
+    def _compute_available_quantity(self):
+        for book in self:
+            book.available_quantity = (book.qty_available or 0) - (book.borrowed_count or 0)
+
+    def _search_available_quantity(self, operator, value):
+        books = self.search([])
+        result = []
+        sanitized = int(value)
+        for book in books:
+            book._compute_available_quantity()
+            if operator == "=" and book.available_quantity == sanitized:
+                result.append(book.id)
+            elif operator == ">" and book.available_quantity > sanitized:
+                result.append(book.id)
+            elif operator == ">=" and book.available_quantity >= sanitized:
+                result.append(book.id)
+            elif operator == "<" and book.available_quantity < sanitized:
+                result.append(book.id)
+            elif operator == "<=" and book.available_quantity <= sanitized:
+                result.append(book.id)
+            elif operator == "!=" and book.available_quantity != sanitized:
+                result.append(book.id)
+        return [("id", "in", result)] if result else [("id", "=", False)]
 
     @api.depends("copy_ids.state")
     def _compute_borrowed_count(self):
@@ -86,31 +101,33 @@ class LibraryBook(models.Model):
 
     def _generate_copies(self):
         self.ensure_one()
-        existing = self.env["library.book.copy"].search_count([("book_id", "=", self.id)])
-        if self.total_copies <= existing:
-            return
-        for i in range(existing + 1, self.total_copies + 1):
-            self.env["library.book.copy"].create({
-                "book_id": self.id,
-                "code": "%s-%02d" % (self.code, i),
-                "state": "available",
-            })
+        self._sync_copies_to_target(self.total_copies)
 
     def action_sync_copies_from_stock(self):
         self.ensure_one()
         if not self.product_id:
             raise ValidationError(_("Sách chưa có sản phẩm tồn kho liên kết."))
-        stock_qty = self.product_id.qty_available
-        existing = self.env["library.book.copy"].search_count([("book_id", "=", self.id)])
-        if stock_qty <= existing:
-            return
-        for i in range(existing + 1, int(stock_qty) + 1):
-            self.env["library.book.copy"].create({
-                "book_id": self.id,
-                "code": "%s-%02d" % (self.code, i),
-                "state": "available",
-            })
+        stock_qty = int(self.product_id.qty_available)
+        self._sync_copies_to_target(stock_qty)
         return True
+
+    def _sync_copies_to_target(self, target):
+        self.ensure_one()
+        existing = self.env["library.book.copy"].search_count([("book_id", "=", self.id)])
+        if existing < target:
+            for i in range(existing + 1, target + 1):
+                self.env["library.book.copy"].create({
+                    "book_id": self.id,
+                    "code": "%s-%02d" % (self.code, i),
+                    "state": "available",
+                })
+        elif existing > target:
+            excess = self.env["library.book.copy"].search([
+                ("book_id", "=", self.id),
+                ("state", "=", "available"),
+            ], order="code desc")
+            to_delete = excess[:existing - target]
+            to_delete.unlink()
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -81,7 +81,8 @@
                             <field name="line_ids">
                                 <tree editable="bottom">
                                     <field name="book_id" />
-                                    <field name="qty_available" string="Có sẵn" />
+                                    <field name="qty_available" string="Tổng số" />
+                                    <field name="available_quantity" string="Có sẵn" />
                                     <field name="quantity" string="Số mượn" />
                                     <field name="state" />
                                 </tree>
