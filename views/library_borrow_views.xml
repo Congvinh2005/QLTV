@@ -8,9 +8,11 @@
                 <field name="name" />
                 <field name="reader_id" />
                 <field name="borrow_date" widget="vn_datetime" />
+                <field name="fee_type" />
                 <field name="return_date" widget="vn_datetime" />
                 <field name="due_date" widget="vn_datetime" />
                 <field name="borrow_fee" widget="vn_money" sum="Phí mượn" />
+                <field name="fine_type" />
                 <field name="fine_amount" widget="vn_money" sum="Phí phạt" />
                 <field name="total_amount" widget="vn_money" sum="Tổng" />
                 <field name="state" widget="badge" />
@@ -68,12 +70,18 @@
                             <field name="borrow_date" />
                             <field name="borrow_days" />
                             <field name="due_date" />
+                            <field name="return_date" widget="vn_datetime" readonly="1" />
                         </group>
                         <group>
+                            <field name="fee_type" widget="radio" />
+                            <field name="daily_fee" widget="vn_money"
+                                attrs="{'invisible': [('fee_type', '!=', 'daily')], 'required': [('fee_type', '=', 'daily')]}" />
                             <field name="borrow_fee" widget="vn_money" />
-                            <field name="fine_amount" widget="vn_money" readonly="1" />
+                            <field name="fine_type" widget="radio" />
+                            <field name="fine_per_day" widget="vn_money"
+                                attrs="{'invisible': [('fine_type', '!=', 'daily')], 'required': [('fine_type', '=', 'daily')]}" />
+                            <field name="fine_amount" widget="vn_money" />
                             <field name="total_amount" widget="vn_money" readonly="1" />
-                            <field name="return_date" widget="vn_datetime" readonly="1" />
                             <field name="currency_id" invisible="1" />
                         </group>
                     </group>

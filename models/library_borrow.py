@@ -32,10 +32,35 @@ class LibraryLoan(models.Model):
         currency_field="currency_id",
         tracking=True,
     )
+    fee_type = fields.Selection(
+        [
+            ("fixed", "Theo lần"),
+            ("daily", "Theo ngày"),
+        ],
+        string="Loại phí",
+        default="fixed",
+        required=True,
+    )
+    daily_fee = fields.Monetary(
+        string="Phí mỗi ngày",
+        currency_field="currency_id",
+    )
     fine_amount = fields.Monetary(
         string="Phí phạt",
         currency_field="currency_id",
         tracking=True,
+    )
+    fine_type = fields.Selection(
+        [
+            ("fixed", "Theo lần"),
+            ("daily", "Theo ngày"),
+        ],
+        string="Loại phạt",
+        default="fixed",
+    )
+    fine_per_day = fields.Monetary(
+        string="Phạt mỗi ngày",
+        currency_field="currency_id",
     )
     total_amount = fields.Monetary(
         string="Tổng tiền",
@@ -78,6 +103,23 @@ class LibraryLoan(models.Model):
                 self.due_date = bd + timedelta(days=self.borrow_days)
         elif self.borrow_date:
             self.due_date = False
+        self._compute_borrow_fee_from_daily()
+
+    @api.onchange("fee_type", "daily_fee")
+    def _onchange_fee_type(self):
+        self._compute_borrow_fee_from_daily()
+
+    @api.onchange("fine_type", "fine_per_day")
+    def _onchange_fine_type(self):
+        self._compute_fine_from_daily()
+
+    def _compute_borrow_fee_from_daily(self):
+        if self.fee_type == "daily" and self.daily_fee and self.borrow_days:
+            self.borrow_fee = self.daily_fee * self.borrow_days
+
+    def _compute_fine_from_daily(self):
+        if self.fine_type == "daily" and self.fine_per_day and self.borrow_days:
+            self.fine_amount = self.fine_per_day * self.borrow_days
 
     @api.onchange("due_date")
     def _onchange_due_date(self):
@@ -210,15 +252,20 @@ class LibraryLoan(models.Model):
                 overdue_days = (today.date() - dd).days
             fine = 0
             if overdue_days > 0:
-                fine = overdue_days * self._get_overdue_fee_per_day()
+                if loan.fine_type == "daily" and loan.fine_per_day:
+                    fine = overdue_days * loan.fine_per_day
+                else:
+                    fine = overdue_days * self._get_overdue_fee_per_day()
             self.env["library.book.copy"].search([
                 ("loan_line_id", "in", loan.line_ids.ids)
             ]).write({"state": "available", "loan_line_id": False})
-            loan.write({
+            vals = {
                 "state": "returned",
                 "return_date": today,
-                "fine_amount": fine,
-            })
+            }
+            if overdue_days > 0:
+                vals["fine_amount"] = fine
+            loan.write(vals)
             loan._create_stock_picking("return")
             loan._create_invoice()
 
@@ -277,7 +324,10 @@ class LibraryLoan(models.Model):
             bd = loan.borrow_date.date() if loan.borrow_date else today.date()
             dd = loan.due_date.date() if loan.due_date else today.date()
             overdue_days = (today.date() - dd).days
-            fine = overdue_days * self._get_overdue_fee_per_day()
+            if loan.fine_type == "daily" and loan.fine_per_day:
+                fine = overdue_days * loan.fine_per_day
+            else:
+                fine = overdue_days * self._get_overdue_fee_per_day()
             loan.write({
                 "state": "overdue",
                 "fine_amount": fine,
