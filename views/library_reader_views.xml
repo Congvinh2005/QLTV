@@ -86,24 +86,65 @@
         <field name="model">library.reader</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_small_column">
+                <field name="code" />
                 <field name="name" />
                 <field name="email" />
+                <field name="phone" />
+                <field name="registration_date" />
+                <field name="total_loan_count" />
                 <field name="current_loan_count" />
                 <field name="overdue_loan_count" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <strong><field name="name"/></strong>
-                            <div><field name="email"/></div>
-                            <div>
-                                <span class="badge badge-pill badge-info">
-                                    Đang mượn: <field name="current_loan_count"/>
+                        <div class="oe_kanban_global_click" style="border-radius: 8px; background: white; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 12px; margin: 4px; width: 280px; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">
+
+                            <!-- Row 1: mã + tổng phiếu -->
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div style="font-size: 13px; font-weight: 600; color: #6B7280;">
+                                    <field name="code" />
+                                </div>
+                                <div>
+                                    <span class="badge" style="background: #2E7D32; color: white; border-radius: 4px; padding: 4px 8px; font-weight: bold; font-size: 11px;">
+                                        <t t-esc="record.total_loan_count.raw_value or 0" /> phiếu
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Row 2: tên -->
+                            <div style="font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 6px;">
+                                <field name="name" />
+                            </div>
+
+                            <!-- Row 3: email | phone -->
+                            <div style="font-size: 11px; color: #6B7280; margin-bottom: 8px;">
+                                <t t-if="record.email.raw_value">
+                                    <span><field name="email" /></span>
+                                </t>
+                                <t t-if="record.email.raw_value and record.phone.raw_value">
+                                    <span> | </span>
+                                </t>
+                                <t t-if="record.phone.raw_value">
+                                    <span><field name="phone" /></span>
+                                </t>
+                            </div>
+
+                            <!-- Row 4: thống kê -->
+                            <div class="d-flex gap-1" style="margin-bottom: 6px;">
+                                <span t-if="record.current_loan_count.raw_value > 0"
+                                    class="badge" style="background: #FF9800; color: white; border-radius: 4px; padding: 3px 8px; font-size: 11px;">
+                                    Đang mượn: <t t-esc="record.current_loan_count.raw_value" />
                                 </span>
                                 <span t-if="record.overdue_loan_count.raw_value > 0"
-                                    class="badge badge-pill badge-danger ml-1">
-                                    Quá hạn: <field name="overdue_loan_count"/>
+                                    class="badge" style="background: #EF5350; color: white; border-radius: 4px; padding: 3px 8px; font-size: 11px;">
+                                    Quá hạn: <t t-esc="record.overdue_loan_count.raw_value" />
                                 </span>
                             </div>
+
+                            <!-- Row 5: ngày đăng ký -->
+                            <div style="border-top: 1px solid #e5e7eb; padding-top: 6px; font-size: 10px; color: #9CA3AF;">
+                                Ngày đăng ký: <field name="registration_date" />
+                            </div>
+
                         </div>
                     </t>
                 </templates>
