@@ -14,7 +14,6 @@
                 <field name="fee_type" />
                 <field name="daily_fee" />
                 <field name="fine_amount" />
-                <field name="fine_type" />
                 <field name="fine_per_day" />
                 <field name="total_amount" />
                 <field name="total_quantity" />

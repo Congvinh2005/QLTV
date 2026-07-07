@@ -42,21 +42,13 @@ class LibraryLoan(models.Model):
         required=True,
     )
     daily_fee = fields.Monetary(
-        string="Phí mỗi ngày",
+        string="Phí mượn mỗi ngày",
         currency_field="currency_id",
     )
     fine_amount = fields.Monetary(
         string="Phí phạt",
         currency_field="currency_id",
         tracking=True,
-    )
-    fine_type = fields.Selection(
-        [
-            ("fixed", "Theo lần"),
-            ("daily", "Theo ngày"),
-        ],
-        string="Loại phạt",
-        default="fixed",
     )
     fine_per_day = fields.Monetary(
         string="Phạt mỗi ngày",
@@ -105,12 +97,9 @@ class LibraryLoan(models.Model):
             self.due_date = False
         self._compute_borrow_fee_from_daily()
 
-    @api.onchange("fee_type", "daily_fee")
+    @api.onchange("fee_type", "daily_fee", "fine_per_day")
     def _onchange_fee_type(self):
         self._compute_borrow_fee_from_daily()
-
-    @api.onchange("fine_type", "fine_per_day")
-    def _onchange_fine_type(self):
         self._compute_fine_from_daily()
 
     def _compute_borrow_fee_from_daily(self):
@@ -118,7 +107,7 @@ class LibraryLoan(models.Model):
             self.borrow_fee = self.daily_fee * self.borrow_days
 
     def _compute_fine_from_daily(self):
-        if self.fine_type == "daily" and self.fine_per_day and self.borrow_days:
+        if self.fee_type == "daily" and self.fine_per_day and self.borrow_days:
             self.fine_amount = self.fine_per_day * self.borrow_days
 
     @api.onchange("due_date")
@@ -252,7 +241,7 @@ class LibraryLoan(models.Model):
                 overdue_days = (today.date() - dd).days
             fine = 0
             if overdue_days > 0:
-                if loan.fine_type == "daily" and loan.fine_per_day:
+                if loan.fee_type == "daily" and loan.fine_per_day:
                     fine = overdue_days * loan.fine_per_day
                 else:
                     fine = overdue_days * self._get_overdue_fee_per_day()
@@ -324,7 +313,7 @@ class LibraryLoan(models.Model):
             bd = loan.borrow_date.date() if loan.borrow_date else today.date()
             dd = loan.due_date.date() if loan.due_date else today.date()
             overdue_days = (today.date() - dd).days
-            if loan.fine_type == "daily" and loan.fine_per_day:
+            if loan.fee_type == "daily" and loan.fine_per_day:
                 fine = overdue_days * loan.fine_per_day
             else:
                 fine = overdue_days * self._get_overdue_fee_per_day()
@@ -332,3 +321,15 @@ class LibraryLoan(models.Model):
                 "state": "overdue",
                 "fine_amount": fine,
             })
+
+    @api.model
+    def search(self, domain, offset=0, limit=None, order=None, count=False):
+        if not self._context.get("skip_overdue_check"):
+            self.with_context(skip_overdue_check=True).action_check_overdue()
+        return super().search(domain, offset=offset, limit=limit, order=order, count=count)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if not self._context.get("skip_overdue_check"):
+            self.with_context(skip_overdue_check=True).action_check_overdue()
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
