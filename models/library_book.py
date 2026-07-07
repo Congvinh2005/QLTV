@@ -127,7 +127,7 @@ class LibraryBook(models.Model):
                 ("state", "=", "available"),
             ], order="code desc")
             to_delete = excess[:existing - target]
-            to_delete.unlink()
+            to_delete.with_context(skip_copy_delete_check=True).unlink()
 
     @api.model_create_multi
     def create(self, vals_list):

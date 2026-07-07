@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class LibraryBookCopy(models.Model):
@@ -33,6 +34,11 @@ class LibraryBookCopy(models.Model):
     def _compute_display_name(self):
         for copy in self:
             copy.display_name = "%s - %s" % (copy.book_id.name, copy.code) if copy.book_id else copy.code
+
+    def unlink(self):
+        if not self.env.context.get("skip_copy_delete_check"):
+            raise UserError(_("Không thể xoá bản sao trực tiếp. Hãy điều chỉnh tồn kho trong Inventory để đồng bộ."))
+        return super().unlink()
 
     def action_mark_available(self):
         self.write({"state": "available", "loan_line_id": False})

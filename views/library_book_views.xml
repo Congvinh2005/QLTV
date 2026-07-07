@@ -53,7 +53,7 @@
                     <notebook>
                         <page string="Các bản sao" name="copies">
                             <field name="copy_ids" readonly="0">
-                                <tree editable="bottom">
+                                <tree editable="bottom" delete="false">
                                     <field name="code" />
                                     <field name="state" widget="badge" />
                                     <field name="loan_line_id" readonly="1" />
