@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class LibraryLoanLine(models.Model):
@@ -19,6 +20,15 @@ class LibraryLoanLine(models.Model):
         readonly=True,
     )
     state = fields.Selection(related="loan_id.state", store=True, readonly=True)
+
+    def unlink(self):
+        for line in self:
+            loan_state = line.loan_id.state
+            if loan_state in ("borrowed", "overdue", "returned"):
+                raise UserError(_(
+                    "Không thể xoá sách '%s' vì phiếu đang ở trạng thái %s."
+                ) % (line.book_id.name, dict(line.loan_id._fields['state'].selection).get(loan_state, loan_state)))
+        return super().unlink()
 
     @api.onchange("book_id")
     def _onchange_book_id(self):
