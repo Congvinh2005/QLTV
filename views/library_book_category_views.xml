@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_library_book_category_tree" model="ir.ui.view">
+        <field name="name">library.book.category.tree</field>
+        <field name="model">library.book.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="book_count" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_library_book_category_form" model="ir.ui.view">
+        <field name="name">library.book.category.form</field>
+        <field name="model">library.book.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="description" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_library_book_category_kanban" model="ir.ui.view">
+        <field name="name">library.book.category.kanban</field>
+        <field name="model">library.book.category</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column">
+                <field name="name" />
+                <field name="book_count" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click" style="border-radius: 8px; background: white; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 12px; margin: 4px; width: 280px; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.08)'">
+                            <div style="font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 6px;">
+                                <field name="name" />
+                            </div>
+                            <div style="font-size: 11px; color: #6B7280;">
+                                <t t-esc="record.book_count.raw_value or 0" /> đầu sách
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_library_book_category" model="ir.actions.act_window">
+        <field name="name">Thể loại</field>
+        <field name="res_model">library.book.category</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+</odoo>

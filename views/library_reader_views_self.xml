@@ -10,7 +10,7 @@
                 <field name="code" />
                 <field name="name" />
                 <field name="author" />
-                <field name="category" />
+                <field name="category_id" />
                 <field name="qty_available" />
                 <field name="available_quantity" />
             </tree>
@@ -29,7 +29,7 @@
                             <field name="code" />
                             <field name="name" />
                             <field name="author" />
-                            <field name="category" />
+                            <field name="category_id" />
                         </group>
                         <group>
                             <field name="qty_available" string="Tổng số bản" />
@@ -48,7 +48,7 @@
             <search>
                 <field name="name" />
                 <field name="author" />
-                <field name="category" />
+                <field name="category_id" />
                 <filter name="in_stock" string="Còn sách" domain="[('available_quantity', '>', 0)]" />
             </search>
         </field>

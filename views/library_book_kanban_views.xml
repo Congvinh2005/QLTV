@@ -8,7 +8,7 @@
                 <field name="code" />
                 <field name="name" />
                 <field name="author" />
-                <field name="category" />
+                <field name="category_id" />
                 <field name="publisher" />
                 <field name="qty_available" />
                 <field name="borrowed_count" />
@@ -25,7 +25,7 @@
                             <div class="o_kanban_record_body">
                                 <div><i class="fa fa-hashtag"/> Mã sách: <field name="code"/></div>
                                 <div><i class="fa fa-user"/> Tác giả: <field name="author"/></div>
-                                <div><i class="fa fa-tag"/> Thể loại: <field name="category"/></div>
+                                <div><i class="fa fa-tag"/> Thể loại: <field name="category_id"/></div>
                                 <div><i class="fa fa-building"/> NXB: <field name="publisher"/></div>
                                 <div class="mt-1">
                                     <span class="badge badge-info">Tổng: <field name="qty_available"/></span>

@@ -12,6 +12,7 @@ class LibraryBook(models.Model):
     name = fields.Char(string="Tiêu đề", required=True, tracking=True)
     author = fields.Char(string="Tác giả", tracking=True)
     category = fields.Char(string="Thể loại")
+    category_id = fields.Many2one("library.book.category", string="Thể loại")
     publisher = fields.Char(string="Nhà xuất bản")
     publication_year = fields.Integer(string="Năm xuất bản")
     isbn = fields.Char(string="ISBN")

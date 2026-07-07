@@ -9,7 +9,7 @@
                 <field name="code" />
                 <field name="name" />
                 <field name="author" />
-                <field name="category" />
+                <field name="category_id" />
                 <field name="qty_available" sum="Tổng" />
                 <field name="borrowed_count" sum="Đang mượn" />
                 <field name="available_quantity" sum="Có sẵn" />
@@ -29,7 +29,7 @@
                             <field name="code" />
                             <field name="name" />
                             <field name="author" />
-                            <field name="category" />
+                            <field name="category_id" />
                             <field name="publisher" />
                         </group>
                         <group>
@@ -81,7 +81,7 @@
                 <field name="code" />
                 <field name="author" />
                 <field name="publisher" />
-                <field name="category" />
+                <field name="category_id" />
                 <field name="isbn" />
                 <separator />
                 <filter name="out_of_stock" string="Hết sách" domain="[('available_quantity', '=', 0)]" />
@@ -90,7 +90,7 @@
                 <separator />
                 <group expand="0" string="Nhóm theo">
                     <filter name="group_category" string="Thể loại"
-                        context="{'group_by': 'category'}" />
+                        context="{'group_by': 'category_id'}" />
                     <filter name="group_author" string="Tác giả" context="{'group_by': 'author'}" />
                     <filter name="group_publisher" string="Nhà xuất bản"
                         context="{'group_by': 'publisher'}" />

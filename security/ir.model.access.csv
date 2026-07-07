@@ -31,3 +31,6 @@ access_library_account_journal_mgr,library.account.journal.mgr,account.model_acc
 access_library_account_account_mgr,library.account.account.mgr,account.model_account_account,group_library_manager,1,1,0,0
 access_library_book_copy_user,library.book.copy.user,model_library_book_copy,group_library_user,1,1,1,0
 access_library_book_copy_manager,library.book.copy.manager,model_library_book_copy,group_library_manager,1,1,1,1
+access_library_book_category_user,library.book.category.user,model_library_book_category,group_library_user,1,1,1,0
+access_library_book_category_manager,library.book.category.manager,model_library_book_category,group_library_manager,1,1,1,1
+access_library_book_category_reader,library.book.category.reader,model_library_book_category,group_library_reader,1,0,0,0
