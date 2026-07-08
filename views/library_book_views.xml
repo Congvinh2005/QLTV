@@ -10,9 +10,9 @@
                 <field name="name" />
                 <field name="author" />
                 <field name="category_id" />
-                <field name="qty_available" sum="Tổng" />
+                <field name="qty_available" sum="Tổng số bản" />
                 <field name="borrowed_count" sum="Đang mượn" />
-                <field name="available_quantity" sum="Có sẵn" />
+                <field name="available_quantity" sum="Có sẵn " />
             </tree>
         </field>
     </record>
@@ -46,9 +46,8 @@
                     <group string="Tồn kho">
                         <group>
                             <field name="qty_available" string="Tổng số bản" />
-                            <field name="total_copies" string="Số bản sao hiện có" readonly="1" />
                             <field name="borrowed_count" readonly="1" />
-                            <field name="available_quantity" readonly="1" />
+                            <field name="available_quantity" string="Có sẵn " readonly="1" />
                         </group>
                         <group>
                             <field name="product_categ_id" />

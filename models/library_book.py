@@ -46,6 +46,7 @@ class LibraryBook(models.Model):
     product_categ_id = fields.Many2one("product.category", string="Danh mục sản phẩm")
     price = fields.Float(string="Giá bìa")
 
+
     _sql_constraints = [
         ("code_unique", "unique(code)", "Mã sách phải là duy nhất."),
         ("isbn_unique", "unique(isbn)", "ISBN phải là duy nhất."),
@@ -113,6 +114,8 @@ class LibraryBook(models.Model):
         self.total_copies = stock_qty
         return True
 
+
+
     def _sync_copies_to_target(self, target):
         self.ensure_one()
         existing = self.env["library.book.copy"].search_count([("book_id", "=", self.id)])
@@ -148,7 +151,7 @@ class LibraryBook(models.Model):
             book.product_id = product
             if not book.product_categ_id:
                 book.product_categ_id = categ
-            book._generate_copies()
+            book._sync_copies_to_target(0)
         return books
 
     def write(self, vals):
