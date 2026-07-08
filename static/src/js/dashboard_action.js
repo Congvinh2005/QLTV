@@ -73,6 +73,14 @@ export class LibraryDashboard extends Component {
         this.actionService.doAction("QLTV.action_library_loan");
     }
 
+    openBookCopy() {
+        this.actionService.doAction("QLTV.action_library_book_copy");
+    }
+
+    openCategory() {
+        this.actionService.doAction("QLTV.action_library_book_category");
+    }
+
     renderCharts() {
         if (typeof Chart === "undefined") {
             console.warn("Chart.js không được nạp, vui lòng kiểm tra asset.");

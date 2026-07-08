@@ -28,7 +28,7 @@
                 </div>
                 <div class="qltv_main">
                     <div class="dashboard_grid">
-                        <div class="dashboard_card small s3 blue">
+                        <div class="dashboard_card small s3 blue" t-on-click="openBook">
                             <div class="card_icon"><i class="fa fa-book"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.total_books || 0"/></div>
@@ -36,7 +36,7 @@
                                 <div class="trend up">↑ 12% so với tháng trước</div>
                             </div>
                         </div>
-                        <div class="dashboard_card small s3 green">
+                        <div class="dashboard_card small s3 green" t-on-click="openReader">
                             <div class="card_icon"><i class="fa fa-users"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.total_readers || 0"/></div>
@@ -44,7 +44,7 @@
                                 <div class="trend up">↑ 8% so với tháng trước</div>
                             </div>
                         </div>
-                        <div class="dashboard_card small yellow">
+                        <div class="dashboard_card small yellow" t-on-click="openLoan">
                             <div class="card_icon"><i class="fa fa-exchange"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.borrowed || 0"/></div>
@@ -52,7 +52,7 @@
                                 <div class="trend down">↓ 100% so với tháng trước</div>
                             </div>
                         </div>
-                        <div class="dashboard_card small pink">
+                        <div class="dashboard_card small pink" t-on-click="openLoan">
                             <div class="card_icon"><i class="fa fa-exclamation-triangle"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.overdue || 0"/></div>
@@ -60,7 +60,7 @@
                                 <div class="trend down">↓ 100% so với tháng trước</div>
                             </div>
                         </div>
-                        <div class="dashboard_card small purple">
+                        <div class="dashboard_card small purple" t-on-click="openBook">
                             <div class="card_icon"><i class="fa fa-check"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.available || 0"/></div>
@@ -69,21 +69,21 @@
                             </div>
                         </div>
 
-                        <div class="dashboard_card medium teal">
+                        <div class="dashboard_card medium teal" t-on-click="openBookCopy">
                             <div class="card_icon"><i class="fa fa-cubes"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.total_copies || 0"/></div>
                                 <div class="title">Tổng bản</div>
                             </div>
                         </div>
-                        <div class="dashboard_card medium orange">
+                        <div class="dashboard_card medium orange" t-on-click="openLoan">
                             <div class="card_icon"><i class="fa fa-pencil"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.total_loans || 0"/></div>
                                 <div class="title">Phiếu mượn</div>
                             </div>
                         </div>
-                        <div class="dashboard_card medium gray">
+                        <div class="dashboard_card medium gray" t-on-click="openLoan">
                             <div class="card_icon"><i class="fa fa-undo"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.returned || 0"/></div>
@@ -114,7 +114,7 @@
                             </div>
                         </div>
 
-                        <div class="dashboard_card large left">
+                        <div class="dashboard_card large left" t-on-click="openBook">
                             <div class="large_card_content">
                                 <div class="large_card_icon"><i class="fa fa-cubes"/></div>
                                 <div>
@@ -123,7 +123,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dashboard_card large right">
+                        <div class="dashboard_card large right" t-on-click="openBook">
                             <div class="large_card_content">
                                 <div class="large_card_icon"><i class="fa fa-exclamation-circle"/></div>
                                 <div>
@@ -173,7 +173,7 @@
                             </div>
                         </div>
 
-                        <div class="dashboard_card doughnut_chart_card">
+                        <div class="dashboard_card doughnut_chart_card" t-on-click="openCategory">
                             <div class="doughnut_header">
                                 <h2 class="doughnut_title">Tỷ lệ đầu sách theo danh mục</h2>
                                 <p class="doughnut_subtitle">Phân bố số đầu sách của từng danh mục trong thư viện.</p>
@@ -193,7 +193,7 @@
                             </div>
                         </div>
 
-                        <div class="dashboard_card chart_card">
+                        <div class="dashboard_card chart_card" t-on-click="openLoan">
                             <div class="card_header">
                                 <div>Tình trạng mượn sách (6 tháng qua)</div>
                             </div>
@@ -206,10 +206,10 @@
                             </div>
                         </div>
 
-                        <div class="dashboard_card chart_card">
+                        <div class="dashboard_card chart_card" t-on-click="openBook">
                             <div class="card_header">
                                 <div>Top sách được mượn nhiều</div>
-                                <div class="header_link">Xem tất cả</div>
+                                <div class="header_link" t-on-click.stop="openBook">Xem tất cả</div>
                             </div>
                             <div class="top_books_list">
                                 <t t-foreach="state.topBooks" t-as="book" t-key="book.name">
@@ -227,10 +227,10 @@
                             </div>
                         </div>
 
-                        <div class="dashboard_card table_card">
+                        <div class="dashboard_card table_card" t-on-click="openLoan">
                             <div class="table_header">
                                 <div>Phiếu mượn mới nhất</div>
-                                <div class="header_link">Xem tất cả</div>
+                                <div class="header_link" t-on-click.stop="openLoan">Xem tất cả</div>
                             </div>
                             <table>
                                 <thead>
@@ -256,10 +256,10 @@
                             </table>
                         </div>
 
-                        <div class="dashboard_card table_card">
+                        <div class="dashboard_card table_card" t-on-click="openReader">
                             <div class="table_header">
                                 <div>Độc giả mới nhất</div>
-                                <div class="header_link">Xem tất cả</div>
+                                <div class="header_link" t-on-click.stop="openReader">Xem tất cả</div>
                             </div>
                             <table>
                                 <thead>
