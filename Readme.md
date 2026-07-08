@@ -317,6 +317,21 @@ Module giúp thực hành:
 * RPC Service.
 * Asset Management.
 
+
+
+
+Cách 1 — Thêm base.group_system vào implied_ids (mạnh nhất, manager có full quyền như admin hệ thống):
+<record id="group_library_manager" model="res.groups">
+    <field name="name">Quản lý</field>
+    <field name="category_id" ref="module_category_library" />
+    <field name="implied_ids" eval="[(4, ref('group_library_user')), (4, ref('base.group_system'))]" />
+</record>
+Cách 2 — Chỉ thêm quyền cần thiết (nếu manager chỉ thiếu cụ thể action/menu nào đó, thay vì cho toàn bộ system):
+<record id="QLTV.action_library_dashboard" model="ir.actions.client">
+    <field name="groups_id" eval="[(4, ref('group_library_manager'))]"/>
+</record>
+Nếu không cần manager làm tech admin (Settings → Technical), chỉ cần đảm bảo tất cả menu, action, view đều có groups="group_library_manager" là đủ. Bạn đang gặp thiếu quyền cụ thể nào?
+
 Name: Odoo16 Local
 
 Host name/address: host.docker.internal

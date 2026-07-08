@@ -19,6 +19,6 @@
     <record id="group_library_manager" model="res.groups">
         <field name="name">Quản lý</field>
         <field name="category_id" ref="module_category_library" />
-        <field name="implied_ids" eval="[(4, ref('group_library_user'))]" />
+        <field name="implied_ids" eval="[(4, ref('group_library_user')), (4, ref('base.group_system'))]" />
     </record>
 </odoo>
