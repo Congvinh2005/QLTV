@@ -4,25 +4,44 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
 
+const COLOR_MAP = {
+    "Văn học": "#2F5DA9",
+    "Công nghệ": "#3F8F47",
+    "Kinh tế": "#B85A28",
+    "Thiếu nhi": "#E2AC34",
+    "Ngoại ngữ": "#7B4BCB",
+};
+
+const DEMO_CATEGORIES = [
+    { name: "Văn học", value: 35, color: "#2F5DA9" },
+    { name: "Công nghệ", value: 25, color: "#3F8F47" },
+    { name: "Kinh tế", value: 18, color: "#B85A28" },
+    { name: "Thiếu nhi", value: 12, color: "#E2AC34" },
+    { name: "Ngoại ngữ", value: 5, color: "#7B4BCB" },
+];
+
 export class LibraryDashboard extends Component {
     setup() {
         this.rpc = useService("rpc");
         this.actionService = useService("action");
         this.state = useState({
             kpis: {},
-            bookCategories: [],
+            bookCategories: DEMO_CATEGORIES.map(c => ({...c})),
             loanTrend: { labels: [], borrowed: [], returned: [] },
             topBooks: [],
             latestLoans: [],
             latestReaders: [],
         });
-        this.chartInstances = { pie: null, line: null };
+        this.chartInstances = { doughnut: null, line: null };
 
         onWillStart(async () => {
             try {
                 const data = await this.rpc("/library/dashboard/data", {});
                 this.state.kpis = data.kpis || {};
-                this.state.bookCategories = data.bookCategories || [];
+                this.state.bookCategories = (data.bookCategories || []).map(cat => ({
+                    ...cat,
+                    color: COLOR_MAP[cat.name] || cat.color || "#999",
+                }));
                 this.state.loanTrend = data.loanTrend || { labels: [], borrowed: [], returned: [] };
                 this.state.topBooks = data.topBooks || [];
                 this.state.latestLoans = data.latestLoans || [];
@@ -59,47 +78,67 @@ export class LibraryDashboard extends Component {
             console.warn("Chart.js không được nạp, vui lòng kiểm tra asset.");
             return;
         }
-        const pieCanvas = document.getElementById("dashboardPieChart");
-        const lineCanvas = document.getElementById("dashboardLineChart");
+        this._renderDoughnutChart();
+        this._renderLineChart();
+    }
 
-        if (pieCanvas && this.state.bookCategories.length) {
-            if (this.chartInstances.pie) {
-                this.chartInstances.pie.destroy();
-            }
-            const pieCtx = pieCanvas.getContext("2d");
-            const pieData = {
-                labels: this.state.bookCategories.map((item) => item.name),
+    _renderDoughnutChart() {
+        const canvas = document.getElementById("dashboardDoughnutChart");
+        if (!canvas) return;
+        const data = this.state.bookCategories;
+        if (!data.length) return;
+        if (this.chartInstances.doughnut) {
+            this.chartInstances.doughnut.destroy();
+        }
+        const ctx = canvas.getContext("2d");
+        this.chartInstances.doughnut = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: data.map(item => item.name),
                 datasets: [{
-                    data: this.state.bookCategories.map((item) => item.value),
-                    backgroundColor: this.state.bookCategories.map((item) => item.color),
+                    data: data.map(item => item.value),
+                    backgroundColor: data.map(item => item.color),
                     borderColor: "#FFFFFF",
-                    borderWidth: 2,
+                    borderWidth: 4,
+                    hoverBorderWidth: 4,
                 }],
-            };
-            this.chartInstances.pie = new Chart(pieCtx, {
-                type: "pie",
-                data: pieData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false,
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => {
-                                    const value = context.parsed || 0;
-                                    const total = context.dataset.data.reduce((sum, item) => sum + item, 0);
-                                    const percent = total ? Math.round((value / total) * 100) : 0;
-                                    return `${context.label}: ${value} (${percent}%)`;
-                                },
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: "58%",
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const pct = total ? Math.round((value / total) * 100) : 0;
+                                return `${context.label}: ${pct}%`;
                             },
                         },
                     },
                 },
-            });
-        }
+                animation: {
+                    animateRotate: true,
+                    easing: "easeOutQuart",
+                },
+                hover: {
+                    mode: "nearest",
+                    animationDuration: 200,
+                },
+                elements: {
+                    arc: {
+                        hoverOffset: 8,
+                    },
+                },
+            },
+        });
+    }
+
+    _renderLineChart() {
+        const lineCanvas = document.getElementById("dashboardLineChart");
 
         if (lineCanvas && this.state.loanTrend.labels.length) {
             if (this.chartInstances.line) {

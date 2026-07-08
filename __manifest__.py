@@ -36,6 +36,7 @@
             "QLTV/static/src/js/pivot_extension.js",
             "QLTV/static/src/js/graph_extension.js",
             "QLTV/static/src/scss/dashboard.scss",
+            "QLTV/static/src/scss/dashboard_chart.scss",
             "QLTV/static/src/scss/library.scss",
             "QLTV/static/src/xml/dashboard_templates.xml",
             "QLTV/static/src/xml/dashboard_cards.xml",

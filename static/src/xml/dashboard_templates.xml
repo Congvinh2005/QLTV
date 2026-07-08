@@ -28,7 +28,7 @@
                 </div>
                 <div class="qltv_main">
                     <div class="dashboard_grid">
-                        <div class="dashboard_card small blue">
+                        <div class="dashboard_card small s3 blue">
                             <div class="card_icon"><i class="fa fa-book"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.total_books || 0"/></div>
@@ -36,7 +36,7 @@
                                 <div class="trend up">↑ 12% so với tháng trước</div>
                             </div>
                         </div>
-                        <div class="dashboard_card small green">
+                        <div class="dashboard_card small s3 green">
                             <div class="card_icon"><i class="fa fa-users"/></div>
                             <div class="card_info">
                                 <div class="number"><t t-esc="state.kpis.total_readers || 0"/></div>
@@ -136,35 +136,35 @@
                         <div class="dashboard_card large invoice">
                             <div class="invoice_grid">
                                 <div class="invoice_item">
-                                    <div class="icon_wrap"><i class="fa fa-file-text-o"/></div>
+                                    <div class="icon_wrap icon_total"><i class="fa fa-file-text-o"/></div>
                                     <div>
                                         <div class="number"><t t-esc="formatNumber(state.kpis.invoice_total) + ' đ'"/></div>
                                         <div class="title">Tổng hoá đơn</div>
                                     </div>
                                 </div>
                                 <div class="invoice_item">
-                                    <div class="icon_wrap"><i class="fa fa-check-circle-o"/></div>
+                                    <div class="icon_wrap icon_paid"><i class="fa fa-check-circle-o"/></div>
                                     <div>
                                         <div class="number"><t t-esc="formatNumber(state.kpis.invoice_paid) + ' đ'"/></div>
                                         <div class="title">Đã thanh toán</div>
                                     </div>
                                 </div>
                                 <div class="invoice_item">
-                                    <div class="icon_wrap"><i class="fa fa-clock-o"/></div>
+                                    <div class="icon_wrap icon_unpaid"><i class="fa fa-clock-o"/></div>
                                     <div>
                                         <div class="number"><t t-esc="formatNumber(state.kpis.invoice_unpaid) + ' đ'"/></div>
                                         <div class="title">Chưa thanh toán</div>
                                     </div>
                                 </div>
                                 <div class="invoice_item">
-                                    <div class="icon_wrap"><i class="fa fa-calendar"/></div>
+                                    <div class="icon_wrap icon_today"><i class="fa fa-calendar"/></div>
                                     <div>
                                         <div class="number"><t t-esc="formatNumber(state.kpis.invoice_today) + ' đ'"/></div>
                                         <div class="title">Hoá đơn hôm nay</div>
                                     </div>
                                 </div>
                                 <div class="invoice_item">
-                                    <div class="icon_wrap"><i class="fa fa-calendar-check-o"/></div>
+                                    <div class="icon_wrap icon_month"><i class="fa fa-calendar-check-o"/></div>
                                     <div>
                                         <div class="number"><t t-esc="formatNumber(state.kpis.invoice_month) + ' đ'"/></div>
                                         <div class="title">Hoá đơn tháng này</div>
@@ -173,23 +173,23 @@
                             </div>
                         </div>
 
-                        <div class="dashboard_card chart_card">
-                            <div class="card_header">
-                                <div>Sách theo danh mục</div>
-                                <div class="header_action">Tất cả <i class="fa fa-chevron-down"/></div>
+                        <div class="dashboard_card doughnut_chart_card">
+                            <div class="doughnut_header">
+                                <h2 class="doughnut_title">Tỷ lệ đầu sách theo danh mục</h2>
+                                <p class="doughnut_subtitle">Phân bố số đầu sách của từng danh mục trong thư viện.</p>
                             </div>
-                            <div class="chart_body">
-                                <div class="pie_chart_wrap">
-                                    <canvas id="dashboardPieChart" height="220"></canvas>
+                            <div class="doughnut_body">
+                                <div class="doughnut_wrap">
+                                    <canvas id="dashboardDoughnutChart" width="200" height="200"></canvas>
                                 </div>
-                                <div class="chart_legend">
-                                    <t t-foreach="state.bookCategories" t-as="item" t-key="item.name">
-                                        <div class="legend_item">
-                                            <span t-att-style="'background: ' + item.color" class="legend_color"/>
-                                            <span class="legend_label"><t t-esc="item.name"/></span>
-                                        </div>
-                                    </t>
-                                </div>
+                            </div>
+                            <div class="doughnut_legend">
+                                <t t-foreach="state.bookCategories" t-as="item" t-key="item.name">
+                                    <div class="doughnut_legend_item">
+                                        <span class="legend_dot" t-att-style="'background: ' + item.color"/>
+                                        <span class="legend_label"><t t-esc="item.name"/></span>
+                                    </div>
+                                </t>
                             </div>
                         </div>
 
@@ -218,7 +218,7 @@
                                         <div class="top_book_info">
                                             <div class="book_name"><t t-esc="book.name"/></div>
                                             <div class="progress_bar">
-                                                <div class="progress_fill" t-att-style="'width: ' + book.percent + '%'"/>
+                                                <div class="progress_fill" t-att-style="'width: ' + book.percent + '%; background: ' + book.color"/>
                                             </div>
                                         </div>
                                         <div class="book_count"><t t-esc="book.borrowed"/></div>

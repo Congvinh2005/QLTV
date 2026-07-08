@@ -103,25 +103,26 @@ class LibraryDashboardController(http.Controller):
 
         category_counts = {}
         for book in books:
-            category = book.product_categ_id.name or book.category or "Khác"
+            category = book.category_id.name or "Khác"
             category_counts[category] = category_counts.get(category, 0) + 1
         sorted_categories = sorted(
             category_counts.items(), key=lambda item: item[1], reverse=True
         )[:5]
-        sample_colors = ["#3B82F6", "#22C55E", "#F97316", "#8B5CF6", "#EC4899"]
+        sample_colors = ["#2F5DA9", "#3F8F47", "#B85A28", "#E2AC34", "#7B4BCB"]
         book_categories = [
             {"name": name, "value": value, "color": sample_colors[idx]}
             for idx, (name, value) in enumerate(sorted_categories)
         ]
         if not book_categories:
             book_categories = [
-                {"name": "Văn học", "value": 35, "color": "#3B82F6"},
-                {"name": "Khoa học", "value": 25, "color": "#22C55E"},
-                {"name": "Thiếu nhi", "value": 20, "color": "#F97316"},
-                {"name": "Kinh tế", "value": 10, "color": "#8B5CF6"},
-                {"name": "Công nghệ", "value": 10, "color": "#EC4899"},
+                {"name": "Văn học", "value": 35, "color": "#2F5DA9"},
+                {"name": "Công nghệ", "value": 25, "color": "#3F8F47"},
+                {"name": "Kinh tế", "value": 18, "color": "#B85A28"},
+                {"name": "Thiếu nhi", "value": 12, "color": "#E2AC34"},
+                {"name": "Ngoại ngữ", "value": 5, "color": "#7B4BCB"},
             ]
 
+        top_book_colors = ["#FF6B6B", "#FBBF24", "#FB923C", "#F472B6", "#A78BFA"]
         top_books = []
         max_borrowed = 1
         sorted_books = books.sorted(key=lambda b: b.borrowed_count, reverse=True)[:5]
@@ -134,14 +135,15 @@ class LibraryDashboardController(http.Controller):
                 "name": book.name,
                 "borrowed": book.borrowed_count,
                 "percent": int((book.borrowed_count or 0) * 100 / max_borrowed) if max_borrowed else 0,
+                "color": top_book_colors[idx] if idx < len(top_book_colors) else "#4361EE",
             })
         if not top_books:
             top_books = [
-                {"rank": 1, "name": "Đắc nhân tâm", "borrowed": 25, "percent": 100},
-                {"rank": 2, "name": "Nhà giả kim", "borrowed": 18, "percent": 72},
-                {"rank": 3, "name": "Cho tôi xin một vé đi tuổi thơ", "borrowed": 15, "percent": 60},
-                {"rank": 4, "name": "Dế mèn phiêu lưu ký", "borrowed": 12, "percent": 48},
-                {"rank": 5, "name": "Atomic Habits", "borrowed": 10, "percent": 40},
+                {"rank": 1, "name": "Đắc nhân tâm", "borrowed": 25, "percent": 100, "color": "#FF6B6B"},
+                {"rank": 2, "name": "Nhà giả kim", "borrowed": 18, "percent": 72, "color": "#FBBF24"},
+                {"rank": 3, "name": "Cho tôi xin một vé đi tuổi thơ", "borrowed": 15, "percent": 60, "color": "#FB923C"},
+                {"rank": 4, "name": "Dế mèn phiêu lưu ký", "borrowed": 12, "percent": 48, "color": "#F472B6"},
+                {"rank": 5, "name": "Atomic Habits", "borrowed": 10, "percent": 40, "color": "#A78BFA"},
             ]
 
         def normalize_date(dt):

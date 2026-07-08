@@ -87,6 +87,10 @@
     gap: 18px;
 }
 
+.qltv_dashboard_page .dashboard_card.s3 {
+    grid-column: span 3;
+}
+
 .qltv_dashboard_page .dashboard_card.medium {
     grid-column: span 4;
     display: flex;
@@ -96,7 +100,7 @@
 
 .qltv_dashboard_page .dashboard_card.large {
     grid-column: span 6;
-    min-height: 140px;
+    // min-height: 140px;
 }
 
 .qltv_dashboard_page .dashboard_card.large.left {
@@ -117,7 +121,7 @@
 }
 
 .qltv_dashboard_page .dashboard_card.table_card {
-    grid-column: span 4;
+    grid-column: span 6;
     padding: 20px 22px;
 }
 
@@ -158,10 +162,25 @@
     color: #0D9488;
 }
 
-.qltv_dashboard_page .dashboard_card.orange .card_icon,
-.qltv_dashboard_page .invoice_item .icon_wrap {
-    background: rgba(251, 191, 36, 0.12);
+.qltv_dashboard_page .icon_wrap.icon_total {
+    background: rgba(37, 99, 235, 0.10);
+    color: #2563EB;
+}
+.qltv_dashboard_page .icon_wrap.icon_paid {
+    background: rgba(22, 163, 74, 0.10);
+    color: #16A34A;
+}
+.qltv_dashboard_page .icon_wrap.icon_unpaid {
+    background: rgba(234, 88, 12, 0.10);
     color: #EA580C;
+}
+.qltv_dashboard_page .icon_wrap.icon_today {
+    background: rgba(124, 58, 237, 0.10);
+    color: #7C3AED;
+}
+.qltv_dashboard_page .icon_wrap.icon_month {
+    background: rgba(13, 148, 136, 0.10);
+    color: #0D9488;
 }
 
 .qltv_dashboard_page .dashboard_card.gray .card_icon {
@@ -433,6 +452,7 @@
         grid-template-columns: repeat(1, minmax(0, 1fr));
     }
     .qltv_dashboard_page .dashboard_card.small,
+    .qltv_dashboard_page .dashboard_card.s3,
     .qltv_dashboard_page .dashboard_card.medium,
     .qltv_dashboard_page .dashboard_card.large,
     .qltv_dashboard_page .dashboard_card.chart_card,
