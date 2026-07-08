@@ -25,6 +25,11 @@ class LibraryReader(models.Model):
     )
     loan_ids = fields.One2many("library.loan", "reader_id", string="Phiếu mượn")
     partner_id = fields.Many2one("res.partner", string="Khách hàng", readonly=True, copy=False)
+    role = fields.Selection([
+        ("reader", "Khách mượn"),
+        ("user", "Nhân viên"),
+        ("manager", "Quản lý"),
+    ], string="Vai trò", default="reader", required=True)
     total_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Tổng số phiếu mượn")
     current_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Đang mượn")
     overdue_loan_count = fields.Integer(compute="_compute_loan_stats", store=True, string="Quá hạn")
@@ -87,13 +92,18 @@ class LibraryReader(models.Model):
             return self.user_id
         if not self.username:
             raise ValidationError(_("Vui lòng nhập tên tài khoản."))
-        group_reader = self.env.ref("QLTV.group_library_reader")
+        group_mapping = {
+            "reader": "QLTV.group_library_reader",
+            "user": "QLTV.group_library_user",
+            "manager": "QLTV.group_library_manager",
+        }
+        group = self.env.ref(group_mapping.get(self.role, "QLTV.group_library_reader"))
         user = self.env["res.users"].sudo().create({
             "name": self.name,
             "login": self.username,
             "password": self.password,
             "email": self.email or "",
-            "groups_id": [(4, group_reader.id)],
+            "groups_id": [(4, group.id)],
         })
         self.user_id = user
         return user

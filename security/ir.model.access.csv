@@ -34,3 +34,8 @@ access_library_book_copy_manager,library.book.copy.manager,model_library_book_co
 access_library_book_category_user,library.book.category.user,model_library_book_category,group_library_user,1,1,1,0
 access_library_book_category_manager,library.book.category.manager,model_library_book_category,group_library_manager,1,1,1,1
 access_library_book_category_reader,library.book.category.reader,model_library_book_category,group_library_reader,1,0,0,0
+access_library_stock_picking_reader,library.stock.picking.reader,stock.model_stock_picking,group_library_reader,1,0,0,0
+access_library_stock_move_reader,library.stock.move.reader,stock.model_stock_move,group_library_reader,1,0,0,0
+access_library_stock_location_reader,library.stock.location.reader,stock.model_stock_location,group_library_reader,1,0,0,0
+access_library_product_product_reader,library.product.product.reader,product.model_product_product,group_library_reader,1,0,0,0
+access_library_account_move_reader,library.account.move.reader,account.model_account_move,group_library_reader,1,0,0,0

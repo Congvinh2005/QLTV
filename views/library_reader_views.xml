@@ -4,8 +4,9 @@
         <field name="name">library.reader.tree</field>
         <field name="model">library.reader</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-danger="role == 'manager'" decoration-success="role == 'user'" decoration-info="role == 'reader'">
                 <field name="code" />
+                <field name="role" />
                 <field name="name" />
                 <field name="email" />
                 <field name="phone" />
@@ -29,6 +30,7 @@
                             <field name="name" />
                             <field name="email" />
                             <field name="phone" />
+                            <field name="role" />
                         </group>
                         <group>
                             <field name="registration_date" />
