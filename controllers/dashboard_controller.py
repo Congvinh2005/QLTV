@@ -213,7 +213,7 @@ class LibraryDashboardController(http.Controller):
                 "available": sum(books.mapped("available_quantity")),
                 "total_readers": Reader.search_count([]),
                 "total_loans": Loan.search_count([]),
-                "borrowed": Loan.search_count([("state", "=", "borrowed")]),
+                "borrowed": sum(books.mapped("borrowed_count")),
                 "overdue": Loan.search_count([("state", "=", "overdue")]),
                 "returned": Loan.search_count([("state", "=", "returned")]),
                 "total_revenue": total_revenue,
