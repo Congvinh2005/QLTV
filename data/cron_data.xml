@@ -7,6 +7,27 @@
         <field name="padding">5</field>
     </record>
 
+    <record id="seq_library_book" model="ir.sequence">
+        <field name="name">Mã sách thư viện</field>
+        <field name="code">library.book</field>
+        <field name="prefix">S</field>
+        <field name="padding">1</field>
+    </record>
+
+    <record id="seq_library_book_category" model="ir.sequence">
+        <field name="name">Mã thể loại thư viện</field>
+        <field name="code">library.book.category</field>
+        <field name="prefix">TL</field>
+        <field name="padding">1</field>
+    </record>
+
+    <record id="seq_library_reader" model="ir.sequence">
+        <field name="name">Mã độc giả thư viện</field>
+        <field name="code">library.reader</field>
+        <field name="prefix">DG</field>
+        <field name="padding">1</field>
+    </record>
+
     <record id="overdue_fee_per_day" model="ir.config_parameter">
         <field name="key">qltv.overdue_fee_per_day</field>
         <field name="value">1000</field>

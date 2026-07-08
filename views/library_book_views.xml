@@ -34,11 +34,10 @@
                             <field name="name" />
                             <field name="author" />
                             <field name="category_id" />
-                            <field name="publisher" />
                         </group>
                         <group>
                             <field name="publication_year" />
-                            <field name="isbn" />
+                            <field name="publisher" />
                             <field name="price" />
                             <field name="shelf_location" />
                         </group>
@@ -86,7 +85,6 @@
                 <field name="author" />
                 <field name="publisher" />
                 <field name="category_id" />
-                <field name="isbn" />
                 <separator />
                 <filter name="out_of_stock" string="Hết sách" domain="[('available_quantity', '=', 0)]" />
                 <filter name="available" string="Còn sách" domain="[('available_quantity', '>', 0)]" />

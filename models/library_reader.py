@@ -8,7 +8,10 @@ class LibraryReader(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "name"
 
-    code = fields.Char(string="Mã người đọc", required=True, copy=False, tracking=True)
+    code = fields.Char(
+        string="Mã người đọc", required=False, copy=False, tracking=True,
+        default=lambda self: self.env["ir.sequence"].next_by_code("library.reader"),
+    )
     name = fields.Char(string="Họ tên", required=True, tracking=True)
     email = fields.Char(string="Email")
     phone = fields.Char(string="Điện thoại")
@@ -57,6 +60,10 @@ class LibraryReader(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        sequence = self.env["ir.sequence"]
+        for vals in vals_list:
+            if not vals.get("code"):
+                vals["code"] = sequence.next_by_code("library.reader")
         readers = super().create(vals_list)
         for reader in readers:
             if reader.password:

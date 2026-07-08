@@ -6,6 +6,10 @@ class LibraryBookCategory(models.Model):
     _description = "Thể loại sách"
     _order = "name"
 
+    code = fields.Char(
+        string="Mã thể loại", required=False, copy=False,
+        default=lambda self: self.env["ir.sequence"].next_by_code("library.book.category"),
+    )
     name = fields.Char(string="Tên thể loại", required=True, tracking=True)
     description = fields.Text(string="Mô tả")
     book_count = fields.Integer(
@@ -18,3 +22,15 @@ class LibraryBookCategory(models.Model):
             cat.book_count = len(cat.book_ids)
 
     book_ids = fields.One2many("library.book", "category_id", string="Sách")
+
+    _sql_constraints = [
+        ("code_unique", "unique(code)", "Mã thể loại phải là duy nhất."),
+    ]
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        sequence = self.env["ir.sequence"]
+        for vals in vals_list:
+            if not vals.get("code"):
+                vals["code"] = sequence.next_by_code("library.book.category")
+        return super().create(vals_list)
