@@ -65,6 +65,7 @@ class LibraryDashboardController(http.Controller):
         Reader = request.env["library.reader"].sudo()
         Loan = request.env["library.loan"].sudo()
         Invoice = request.env["account.move"].sudo()
+        Category = request.env["library.book.category"].sudo()
 
         def revenue_domain(start=None, end=None):
             domain = [("state", "in", ("returned", "overdue"))]
@@ -225,6 +226,11 @@ class LibraryDashboardController(http.Controller):
                 "invoice_unpaid": invoice_unpaid,
                 "invoice_today": invoice_today,
                 "invoice_month": invoice_month,
+                "total_categories": Category.search_count([]),
+                "category_most_books": max(
+                    (c.book_count for c in Category.search([])),
+                    default=0,
+                ),
             },
             "bookCategories": book_categories,
             "loanTrend": loan_trend,

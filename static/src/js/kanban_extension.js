@@ -13,7 +13,7 @@ export class LibraryKanbanController extends KanbanController {
             modelName: this.props.resModel,
         });
         const model = this.props.resModel;
-        if (model && ["library.book", "library.reader", "library.loan"].includes(model)) {
+        if (model && ["library.book", "library.reader", "library.loan", "library.book.category"].includes(model)) {
             onWillStart(async () => {
                 try {
                     const data = await this.env.services.rpc("/library/dashboard/data", {});

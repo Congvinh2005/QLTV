@@ -60,6 +60,31 @@
                 </div>
             </div>
 
+            <!-- Thể loại -->
+            <div class="dashboard_row" t-if="dashboardState.modelName === 'library.book.category'">
+                <div class="dashboard_card teal">
+                    <div class="icon"><i class="fa fa-tags"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.total_categories || 0"/>
+                        <div class="title">Thể loại</div>
+                    </div>
+                </div>
+                <div class="dashboard_card blue">
+                    <div class="icon"><i class="fa fa-book"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.total_books || 0"/>
+                        <div class="title">Tổng đầu sách</div>
+                    </div>
+                </div>
+                <div class="dashboard_card purple">
+                    <div class="icon"><i class="fa fa-star"/></div>
+                    <div class="content">
+                        <div class="number" t-esc="dashboardState.kpis.category_most_books || 0"/>
+                        <div class="title">Nhiều sách nhất</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Mượn trả -->
             <div class="dashboard_row" t-if="dashboardState.modelName === 'library.loan'">
                 <div class="dashboard_card orange">
