@@ -27,6 +27,11 @@ class LibraryLoan(models.Model):
         tracking=True,
     )
     return_date = fields.Datetime(string="Ngày trả thực tế", tracking=True)
+    deposit_amount = fields.Monetary(
+        string="Tiền đặt cọc",
+        currency_field="currency_id",
+        tracking=True,
+    )
     borrow_fee = fields.Monetary(
         string="Phí mượn",
         currency_field="currency_id",
@@ -84,6 +89,30 @@ class LibraryLoan(models.Model):
     )
     picking_ids = fields.One2many("stock.picking", "loan_id", string="Phiếu kho")
     invoice_ids = fields.One2many("account.move", "loan_id", string="Hoá đơn")
+    payment_state = fields.Selection(compute="_compute_payment_state", string="Trạng thái thanh toán", selection=[
+        ("not_paid", "Chưa thanh toán"),
+        ("in_payment", "Đang thanh toán"),
+        ("paid", "Đã thanh toán"),
+        ("partial", "Thanh toán một phần"),
+        ("reversed", "Đã hoàn tiền"),
+    ])
+
+    @api.depends("invoice_ids.payment_state")
+    def _compute_payment_state(self):
+        for loan in self:
+            states = loan.invoice_ids.mapped("payment_state")
+            if not states:
+                loan.payment_state = "not_paid"
+            elif all(s == "paid" for s in states):
+                loan.payment_state = "paid"
+            elif any(s == "paid" for s in states):
+                loan.payment_state = "partial"
+            elif all(s == "reversed" for s in states):
+                loan.payment_state = "reversed"
+            elif any(s == "in_payment" for s in states):
+                loan.payment_state = "in_payment"
+            else:
+                loan.payment_state = "not_paid"
 
     @api.onchange("borrow_days", "borrow_date")
     def _onchange_borrow_days(self):
@@ -269,7 +298,7 @@ class LibraryLoan(models.Model):
 
     def _create_invoice(self):
         self.ensure_one()
-        total = (self.borrow_fee or 0) + (self.fine_amount or 0)
+        total = (self.borrow_fee or 0) + (self.fine_amount or 0) + (self.deposit_amount or 0)
         if total <= 0:
             return
         partner = self.reader_id._get_or_create_partner()
@@ -284,6 +313,14 @@ class LibraryLoan(models.Model):
                 "name": "Phí mượn sách - %s" % self.name,
                 "quantity": 1,
                 "price_unit": self.borrow_fee,
+                "tax_ids": False,
+            }))
+        if self.deposit_amount:
+            invoice_lines.append((0, 0, {
+                "product_id": product.id,
+                "name": "Tiền đặt cọc - %s" % self.name,
+                "quantity": 1,
+                "price_unit": self.deposit_amount,
                 "tax_ids": False,
             }))
         if self.fine_amount:

@@ -20,6 +20,7 @@
                 <field name="state" />
                 <field name="line_ids" />
                 <field name="currency_id" />
+                <field name="payment_state" />
                 <templates>
                     <t t-name="kanban-box">
                         <t t-set="state_color" t-value="'#9E9E9E'" />
@@ -83,7 +84,26 @@
 
                             <!-- Book list footer -->
                             <div style="border-top: 1px solid #e5e7eb; padding-top: 8px;">
-                                <div class="text-muted mb-1" style="font-size: 10px; color: #6B7280;">Sách:</div>
+                                <div class="text-muted mb-1" style="font-size: 10px; color: #6B7280;">
+                                    <t t-if="record.payment_state.raw_value == 'paid'">
+                                        <span class="badge" style="background: #E8F5E9; color: #2E7D32; border-radius: 4px; font-size: 10px;">Đã thanh toán</span>
+                                    </t>
+                                    <t t-elif="record.payment_state.raw_value == 'partial'">
+                                        <span class="badge" style="background: #FFF8E1; color: #F57F17; border-radius: 4px; font-size: 10px;">Thanh toán một phần</span>
+                                    </t>
+                                    <t t-elif="record.payment_state.raw_value == 'not_paid'">
+                                        <span class="badge" style="background: #F3F4F6; color: #6B7280; border-radius: 4px; font-size: 10px;">Chưa thanh toán</span>
+                                    </t>
+                                    <t t-elif="record.payment_state.raw_value == 'reversed'">
+                                        <span class="badge" style="background: #FCE4EC; color: #C62828; border-radius: 4px; font-size: 10px;">Đã hoàn tiền</span>
+                                    </t>
+                                    <t t-elif="record.payment_state.raw_value == 'in_payment'">
+                                        <span class="badge" style="background: #E3F2FD; color: #1565C0; border-radius: 4px; font-size: 10px;">Đang thanh toán</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span style="color: #6B7280;">Sách:</span>
+                                    </t>
+                                </div>
                                 <t t-set="books" t-value="record.line_ids.records || []" />
                                 <t t-foreach="books.slice(0, 3)" t-as="line">
                                     <div class="d-flex align-items-center mb-1">
